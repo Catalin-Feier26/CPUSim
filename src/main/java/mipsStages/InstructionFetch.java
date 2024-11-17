@@ -1,0 +1,66 @@
+package mipsStages;
+
+import lowComponents.ProgramCounter;
+import lowComponents.InstructionMemory;
+import pipelineRegisters.IFIDRegister;
+
+
+public class InstructionFetch {
+    private ProgramCounter pc;
+    private InstructionMemory instructionMemory;
+    private IFIDRegister ifidRegister;
+
+    private String instruction;
+    // Made for Testing
+
+    public InstructionFetch(){
+        this.instructionMemory = new InstructionMemory("C:/Users/Zach/Desktop/ComputerS/year3/sem1/structure of computer systems/CPUSim/src/main/resources/instructions.txt");
+        this.pc = new ProgramCounter(instructionMemory.getInstructionCount());
+        this.ifidRegister = new IFIDRegister();
+        this.instruction = "";
+    }
+
+    public InstructionFetch(ProgramCounter pc, InstructionMemory instructionMemory, IFIDRegister ifidRegister){
+        this.pc = pc;
+        this.instructionMemory=instructionMemory;
+        this.ifidRegister=ifidRegister;
+        this.instruction= "";
+    }
+    public String fetchInstruction(){
+        this.instruction=instructionMemory.getInstruction(pc.getPC());
+        if(pc.getPC()>= instructionMemory.getInstructionCount())
+            pc.reset();
+        else
+            pc.incrementPC();
+        return instruction;
+    }
+    public void setUpIFIDRegister(){
+        ifidRegister.setInstruction(instruction);
+        ifidRegister.setPC(pc.getPC());
+    }
+    public void execute(){
+        fetchInstruction();
+        setUpIFIDRegister();
+        prettyPrint();
+    }
+    public void prettyPrint(){
+        System.out.println("The current instruction is: "+instruction);
+        System.out.println("The PC is: " + pc.getPC());
+    }
+
+    public IFIDRegister getIfidRegister(){
+        return ifidRegister;
+    }
+    public void setIfidRegister(IFIDRegister ifidRegister){
+        this.ifidRegister=ifidRegister;
+    }
+    public ProgramCounter getPc(){
+        return  pc;
+    }
+    public void setPc(ProgramCounter pc){
+        this.pc = pc;
+    }
+    public String getInstruction(){
+        return  instruction;
+    }
+}
