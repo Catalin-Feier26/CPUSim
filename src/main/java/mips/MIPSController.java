@@ -7,6 +7,7 @@ import mipsStages.*;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
+import java.util.List;
 
 public class MIPSController {
     private ProgramCounter pc;
@@ -39,6 +40,15 @@ public class MIPSController {
         instructionExecute = new InstructionExecute(idexRegister, exmemRegister);
         memoryStage = new MemoryStage(exmemRegister, memwbRegister, new DataMemory(), pc);
         writeBackStage = new WriteBackStage(memwbRegister, registerFile);
+
+        // Detect and resolve hazards
+        List<String> instructionList = instructionMemory.getInstructions();
+        HazardDetection hazardDetection = new HazardDetection(instructionList);
+        hazardDetection.detectAndSolveHazards();
+        hazardDetection.writeUpdatedInstructionsToFile("UpdatedInstructions.txt");
+
+        // Update instruction memory with the new instructions
+        instructionMemory.setInstructions(hazardDetection.getUpdatedInstructionList());
     }
 
     public static void main(String[] args) {
