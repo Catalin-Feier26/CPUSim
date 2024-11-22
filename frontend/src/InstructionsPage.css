@@ -1,0 +1,36 @@
+/* Ensure the html and body take up the full height of the viewport */
+body {
+    height: 100%;  /* Full height of the screen */
+    margin: 0;     /* Remove default margin */
+    padding: 0;    /* Remove default padding */
+    background-color: #004721;  /* Set green background for the whole page */
+}
+
+/* Instructions page styles */
+.instructions-page {
+    text-align: center;
+    padding: 20px;
+    font-size: 32px;
+    color: #EFE7E6;
+    font-family: "Times New Roman";
+    min-height: 100%;  /* Ensure the instructions container takes up the full page */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;  /* Vertically center the content */
+    align-items: center;      /* Horizontally center the content */
+}
+
+/* Style for the <pre> element (for displaying instructions) */
+pre {
+    background-color: #EFE7E6;  /* Light background for the instructions */
+    color: #38B42D;             /* Green text color */
+    font-size: 24px;
+    padding: 20px;
+    border-radius: 20px;
+    white-space: pre-wrap;      /* Allow wrapping of long lines */
+    word-wrap: break-word;      /* Break long words */
+    width: 80%;                 /* Adjust width to 80% of the screen */
+    max-width: none;            /* Remove the max-width restriction */
+    overflow-wrap: break-word;  /* Handle long words that might break the layout */
+    margin: 0 auto;             /* Center the element horizontally */
+}

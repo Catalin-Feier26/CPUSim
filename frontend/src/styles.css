@@ -1,0 +1,34 @@
+/* Navbar styling */
+.navbar {
+    display: flex;
+    justify-content: space-around;
+    background-color: #004721; /* Navbar background */
+    color: #EFE7E6;
+    padding: 10px 20px;
+    border-radius: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 20px 0;
+}
+
+/* Button styling */
+.btn {
+    background-color: #a0af84;
+    color: #363030;
+    border: none;
+    border-radius: 9px;
+    padding: 8px 16px; /* Adjust padding for text size */
+    cursor: pointer;
+    font-size: 15px;
+    width: auto; /* Button width based on text */
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #8f9f6f;
+}
+.btn:active{
+    background-color: #363030;
+    color: #efe7e6;
+}

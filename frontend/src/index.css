@@ -6,8 +6,20 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+/* index.css */
+.green-background {
+  background-color: #004721;
+  min-height: 100vh;
+}
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+.App-logo{
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 10px auto;
 }
