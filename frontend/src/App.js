@@ -1,9 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Import necessary components
 import Layout from './Layout'; // Import Layout component
-import MIPS from './MIPS.svg'; // Import your MIPS image
 import './index.css'; // Import CSS for styling
 import InstructionsPage from "./InstructionsPage";
+import SimulationPage from "./SimulationPage";
+import ModifyInstructions from "./ModifyInstructions";
+import HowToUse from "./HowToUse";
 function App() {
     return (
         <Router> {/* Wrap the app with Router to enable routing */}
@@ -11,14 +13,7 @@ function App() {
                 <Routes>
                     <Route
                         path="/"
-                        element={
-                            <div className="App">
-                                <header className="App-header">
-                                    <img src={MIPS} className="App-logo" alt="MIPS Diagram" />
-                                    <div>Home Page</div>
-                                </header>
-                            </div>
-                        }
+                        element={<HowToUse/>}
                     />
                     <Route
                         path="/instructions"
@@ -26,7 +21,7 @@ function App() {
                     />
                     <Route
                         path="/modify"
-                        element={<div>Modify Instructions Page</div>}
+                        element={<ModifyInstructions/>}
                     />
                     <Route
                         path="/clock"
@@ -38,7 +33,7 @@ function App() {
                     />
                     <Route
                         path="/simulation"
-                        element={<div>Simulation Page</div>}
+                        element={<SimulationPage/>}
                     />
                 </Routes>
             </Layout>

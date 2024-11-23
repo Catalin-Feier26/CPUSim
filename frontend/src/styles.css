@@ -1,20 +1,19 @@
-/* Navbar styling */
 .navbar {
     display: flex;
-    justify-content: space-around;
-    background-color: #004721; /* Navbar background */
+    justify-content: center; /* Center the buttons */
+    background-color: #081C15; /* Navbar background */
     color: #EFE7E6;
     padding: 10px 20px;
-    border-radius: 10px;
     width: 100%;
     box-sizing: border-box;
-    margin: 20px 0;
+    margin-top: 0;
+    margin-bottom: 20px;
+    gap: 20px; /* Add space between buttons */
 }
 
-/* Button styling */
 .btn {
-    background-color: #a0af84;
-    color: #363030;
+    background-color: #1B4332;
+    color: #EFE7E6;
     border: none;
     border-radius: 9px;
     padding: 8px 16px; /* Adjust padding for text size */
@@ -26,9 +25,15 @@
 }
 
 .btn:hover {
-    background-color: #8f9f6f;
+    background-color: #95D5B2;
+    color: #081C15;
 }
-.btn:active{
+
+.btn:active {
     background-color: #363030;
     color: #efe7e6;
+}
+
+.content {
+    padding-bottom: 20px; /* Add padding between navbar and content */
 }

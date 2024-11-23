@@ -1,8 +1,9 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
-import styles from './styles.css'
-const Layout = ({children}) => {
-    const navigate = useNavigate(); // Create navigate function
+import { useNavigate } from 'react-router-dom';
+import './styles.css';
+
+const Layout = ({ children }) => {
+    const navigate = useNavigate();
 
     const handleHomeClick = () => navigate('/');
     const handleSeeInstructionsClick = () => navigate('/instructions');
@@ -13,8 +14,7 @@ const Layout = ({children}) => {
 
     return (
         <div>
-            {/* Navbar */}
-            <nav style={styles.navbar}>
+            <nav className="navbar">
                 <button className="btn" onClick={handleHomeClick}>Home</button>
                 <button className="btn" onClick={handleSeeInstructionsClick}>See Instructions</button>
                 <button className="btn" onClick={handleModifyInstructionsClick}>Modify Instructions</button>

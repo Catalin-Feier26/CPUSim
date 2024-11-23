@@ -27,4 +27,15 @@ public class ApiController {
             return "Error reading instructions file.";
         }
     }
+    @GetMapping("/api/syntax")
+    public String getSyntax(){
+        try{
+            String filePath="src/main/resources/syntax.txt";
+            String syntax = new String(Files.readAllBytes(Paths.get(filePath)));
+            return syntax;
+        }catch (IOException e){
+            e.getMessage();
+            return "Error fetching the Instructions Syntax";
+        }
+    }
 }

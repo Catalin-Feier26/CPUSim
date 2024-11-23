@@ -1,12 +1,11 @@
-import React, {useEffect, useState} from "react";
-import styles from './InstructionsPage.css'
+import React, { useEffect, useState } from "react";
+import './InstructionsPage.css';
 
-const InstructionsPage = ({Children}) =>{
-    const[instructions, setInstructions] = useState('');
-    const [error, setError]=useState('');
+const InstructionsPage = () => {
+    const [instructions, setInstructions] = useState('');
+    const [error, setError] = useState('');
 
     useEffect(() => {
-        // Fetch the instructions from the Spring Boot backend
         fetch("/api/instructions")
             .then(response => response.text())
             .then(data => setInstructions(data))
@@ -15,10 +14,11 @@ const InstructionsPage = ({Children}) =>{
                 setError("Failed to load instructions");
             });
     }, []);
+
     return (
         <div className="instructions-page">
-            <h1>Instructions</h1>
-            <pre>{instructions}</pre>
+            <h1 className="h1">Current instructions in Instruction Memory</h1>
+            {error ? <p>{error}</p> : <pre className="pre1">{instructions}</pre>}
         </div>
     );
 };

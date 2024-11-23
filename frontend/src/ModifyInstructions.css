@@ -1,0 +1,67 @@
+.modify-instructions {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.instructions-section, .syntax-section {
+    width: 45%;
+    background-color: #D8F3DC;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.instructions-section h2, .syntax-section h2 {
+    color: #081C15;
+    background-color: #D8F3DC;
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+textarea {
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    resize: none;
+    font-size: 20px;
+    font-family: Arial, sans-serif;
+    margin-bottom: 20px;
+}
+.syntaxText {
+    font-family: Times;
+    color: #1B4332;
+    text-align: justify;
+    font-size: 20px;
+    margin-bottom: 16px;
+}
+button {
+    background-color: #1B4332;
+    color: #EFE7E6;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    align-self: flex-end; /* Align button to the right */
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #95D5B2;
+    color: #081C15;
+}
+
+.pre2 {
+    background-color: #ffff;
+    padding: 20px;
+    border-radius: 5px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    flex-grow: 1; /* Allow pre to grow and fill the available space */
+}
