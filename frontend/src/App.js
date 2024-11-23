@@ -7,6 +7,7 @@ import SimulationPage from "./SimulationPage";
 import ModifyInstructions from "./ModifyInstructions";
 import HowToUse from "./HowToUse";
 import SelectClock from "./SelectClock";
+import CheckHazards from "./CheckHazards";
 function App() {
     return (
         <Router> {/* Wrap the app with Router to enable routing */}
@@ -30,7 +31,7 @@ function App() {
                     />
                     <Route
                         path="/hazards"
-                        element={<div>Hazards Page</div>}
+                        element={<CheckHazards/>}
                     />
                     <Route
                         path="/simulation"

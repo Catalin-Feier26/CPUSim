@@ -45,12 +45,25 @@ public class ApiController {
             return "Error fetching the Instructions Syntax";
         }
     }
+    @GetMapping("api/hazardLogs")
+    public String getHazardLogs(){
+        try{
+            String filePath="HazardLog.txt";
+            String logs = new String(Files.readAllBytes(Paths.get(filePath)));
+            return logs;
+        }catch (IOException e){
+            e.getMessage();
+            return "Error getting the hazards logs!";
+        }
+    }
+
     @PostMapping("api/setClockType")
     public String setClockType(@RequestBody ClockTypeRequest request){
         this.selectedClockType = request.getClockType();
         System.out.println("Clock type set to " + selectedClockType);
         return "Clock type set to " + selectedClockType;
     }
+
     @PostMapping("api/newInstructions")
     public String saveNewInstructions(@RequestBody String instructions){
         String filePath ="src/main/resources/NewInstructions.txt";
@@ -64,6 +77,7 @@ public class ApiController {
             return  "Error saving instructions.";
         }
     }
+
 
 
 
