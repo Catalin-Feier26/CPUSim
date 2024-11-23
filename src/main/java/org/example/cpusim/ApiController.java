@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+
 import model.clockType;
 
 @RestController
@@ -49,6 +51,23 @@ public class ApiController {
         System.out.println("Clock type set to " + selectedClockType);
         return "Clock type set to " + selectedClockType;
     }
+    @PostMapping("api/newInstructions")
+    public String saveNewInstructions(@RequestBody String instructions){
+        String filePath ="src/main/resources/NewInstructions.txt";
+        try{
+            Files.write(Paths.get(filePath), instructions.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+            return "Instruction saved successfully!";
+        }catch (IOException e){
+            e.getMessage();
+            return  "Error saving instructions.";
+        }
+    }
+
+
+
+
+
+
 
     public static class ClockTypeRequest{
         private clockType clockType;

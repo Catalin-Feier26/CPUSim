@@ -9,7 +9,10 @@ const ModifyInstructions = () => {
     useEffect(() => {
         fetch("/api/instructions")
             .then(response => response.text())
-            .then(data => setCurrentInstructions(data))
+            .then(data => {
+                setCurrentInstructions(data);
+                setNewInstructions(data); // Initialize newInstructions with current instructions
+            })
             .catch(error => console.error("Error fetching instructions:", error));
 
         fetch("/api/syntax")
@@ -23,8 +26,19 @@ const ModifyInstructions = () => {
     };
 
     const handleSave = () => {
-        // Logic to save new instructions
-        console.log("New Instructions:", newInstructions);
+        fetch("/api/newInstructions", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain',
+            },
+            body: newInstructions,
+        })
+            .then(response => response.text())
+            .then(data => {
+                console.log("Success:", data);
+                setCurrentInstructions(newInstructions); // Update current instructions with new instructions
+            })
+            .catch(error => console.error("Error saving instructions:", error));
     };
 
     return (
@@ -32,7 +46,7 @@ const ModifyInstructions = () => {
             <div className="instructions-section">
                 <h2>Current Instructions</h2>
                 <textarea
-                    value={newInstructions || currentInstructions}
+                    value={newInstructions}
                     onChange={handleInstructionsChange}
                     rows="20"
                     cols="50"
