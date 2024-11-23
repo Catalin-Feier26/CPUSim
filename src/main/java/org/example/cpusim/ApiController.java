@@ -54,8 +54,10 @@ public class ApiController {
     @PostMapping("api/newInstructions")
     public String saveNewInstructions(@RequestBody String instructions){
         String filePath ="src/main/resources/NewInstructions.txt";
+        String instructionsFilePath = "src/main/resources/instructions.txt";
         try{
-            Files.write(Paths.get(filePath), instructions.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+            Files.write(Paths.get(filePath), instructions.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            Files.write(Paths.get(instructionsFilePath), instructions.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
             return "Instruction saved successfully!";
         }catch (IOException e){
             e.getMessage();

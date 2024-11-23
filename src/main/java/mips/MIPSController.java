@@ -44,6 +44,7 @@ public class MIPSController {
         // Detect and resolve hazards
         List<String> instructionList = instructionMemory.getInstructions();
         HazardDetection hazardDetection = new HazardDetection(instructionList);
+        hazardDetection.writeDetectedHazardsToFile("HazardLog.txt");
         hazardDetection.detectAndSolveHazards();
         hazardDetection.writeUpdatedInstructionsToFile("UpdatedInstructions.txt");
 

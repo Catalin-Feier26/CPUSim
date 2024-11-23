@@ -16,9 +16,35 @@ public class HazardDetection {
         this.instructionList = instructionList;
         this.updatedInstructionList = new ArrayList<>();
     }
+    public void writeDetectedHazardsToFile(String filename) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (int i = 0; i < instructionList.size(); i++) {
+                String instruction = instructionList.get(i).toUpperCase();
+                String match = getDestination(instruction);
 
+                if (writeInRegister(match.split(" ")[0])) {
+                    int nr = Math.min(3, instructionList.size() - i - 1); // Look ahead max 3 or remaining instructions
+
+                    for (int lookAhead = 1; lookAhead <= nr; lookAhead++) {
+                        if (i + lookAhead < instructionList.size()) { // Check bounds here
+                            String nextInstruction = instructionList.get(i + lookAhead).toUpperCase();
+
+                            if (destinationMatchesSources(nextInstruction.split(" "), match)) {
+                                writer.write("RAW Hazard between: " + instruction + " and " + nextInstruction + " because of the " + match.split(" ")[0] + " register");
+                                writer.newLine();
+                                break; // Break out of the lookAhead loop
+                            }
+                        }
+                    }
+                }
+            }
+            System.out.println("Detected hazards successfully written to " + filename);
+        } catch (IOException e) {
+            System.err.println("Error writing detected hazards to file: " + e.getMessage());
+        }
+    }
     public void detectAndSolveHazards() {
-        List<String> currentInstructionList = new ArrayList<>(instructionList); // Work with a copy
+        List<String> currentInstructionList = new ArrayList<>(instructionList);
         int iteration = 0; // To track the number of iterations
         do {
             System.out.println("Iteration: " + iteration);
