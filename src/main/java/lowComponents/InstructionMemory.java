@@ -29,7 +29,6 @@ public class InstructionMemory {
      */
     public List<String> loadInstructions(String fileName) {
         try {
-            // Read all lines from the file and store them in the instructions list
             instructions = Files.readAllLines(Paths.get(fileName));
         } catch (IOException e) {
             System.err.println("Error loading instructions from file: " + e.getMessage());

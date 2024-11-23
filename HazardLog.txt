@@ -1,4 +1,1 @@
 RAW Hazard between: ADD R1 R2 R3 and ADD R3 R1 R2 because of the R1 register
-RAW Hazard between: ADD R3 R1 R2 and ADD R5 R3 R2 because of the R3 register
-RAW Hazard between: LW R3 5(R5) and ADD R4 R5 R3 because of the R3 register
-RAW Hazard between: ADD R4 R5 R3 and BEQ R3 R4 6 because of the R4 register

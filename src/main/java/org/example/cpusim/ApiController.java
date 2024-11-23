@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 import model.clockType;
+import mips.MIPSController;
 
 @RestController
 public class ApiController {
@@ -47,6 +48,8 @@ public class ApiController {
     }
     @GetMapping("api/hazardLogs")
     public String getHazardLogs(){
+        new MIPSController();
+        //MIPSController.hazardCaller();
         try{
             String filePath="HazardLog.txt";
             String logs = new String(Files.readAllBytes(Paths.get(filePath)));
@@ -56,12 +59,36 @@ public class ApiController {
             return "Error getting the hazards logs!";
         }
     }
+    @GetMapping("api/updatedInstructions")
+    public String getUpdatedInstructions(){
+        try{
+            String filePath="UpdatedInstructions.txt";
+            String updatedInstructions= new String(Files.readAllBytes(Paths.get(filePath)));
+            return updatedInstructions;
+        }catch (IOException e){
+            e.getMessage();
+            return "Some error occured when fetching updated Instructions";
+        }
+    }
+
 
     @PostMapping("api/setClockType")
     public String setClockType(@RequestBody ClockTypeRequest request){
         this.selectedClockType = request.getClockType();
         System.out.println("Clock type set to " + selectedClockType);
         return "Clock type set to " + selectedClockType;
+    }
+    @PostMapping ("api/updateInstructions")
+    public String updatedInstructions(@RequestBody String instructions){
+        String filePath="FinalInstructionList.txt";
+        try{
+            Files.write(Paths.get(filePath),instructions.getBytes());
+            return "Instructions Saved Successfully!";
+        }catch (IOException e){
+            e.getMessage();
+            System.out.println("Error saving the new instructions");
+            return "Something went VERY wrong!";
+        }
     }
 
     @PostMapping("api/newInstructions")

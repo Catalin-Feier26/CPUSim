@@ -49,7 +49,7 @@ public class MIPSController {
         hazardDetection.writeUpdatedInstructionsToFile("UpdatedInstructions.txt");
 
         // Update instruction memory with the new instructions
-        instructionMemory.setInstructions(hazardDetection.getUpdatedInstructionList());
+       // instructionMemory.setInstructions(hazardDetection.getUpdatedInstructionList());
     }
 
     public static void main(String[] args) {
@@ -101,5 +101,14 @@ public class MIPSController {
             }
         }
         scanner.close();
+    }
+
+    public static void hazardCaller(){
+        String instructionFilePath="src/main/resources/NewInstructions.txt";
+        String hazardLogFilePath="HazardLog.txt";
+
+        HazardDetection hazardDetection1 = new HazardDetection(instructionFilePath);
+        hazardDetection1.writeDetectedHazardsToFile(hazardLogFilePath);
+        hazardDetection1.writeUpdatedInstructionsToFile("UpdatedInstructions.txt");
     }
 }

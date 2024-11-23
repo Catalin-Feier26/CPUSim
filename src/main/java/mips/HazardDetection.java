@@ -3,6 +3,8 @@ package mips;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.ArrayList;
 import model.*;
@@ -15,6 +17,19 @@ public class HazardDetection {
     public HazardDetection(List<String> instructionList) {
         this.instructionList = instructionList;
         this.updatedInstructionList = new ArrayList<>();
+    }
+    public HazardDetection(String fileName){
+        this.instructionList=loadInstructions(fileName);
+        this.updatedInstructionList=new ArrayList<>();
+    }
+    public List<String> loadInstructions(String fileName) {
+        try {
+            instructionList = Files.readAllLines(Paths.get(fileName));
+        } catch (IOException e) {
+            System.err.println("Error loading instructions from file: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return instructionList;
     }
     public void writeDetectedHazardsToFile(String filename) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {

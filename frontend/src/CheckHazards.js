@@ -26,7 +26,7 @@ const CheckHazards = () => {
     };
 
     const handleSave = () => {
-        fetch("/api/saveUpdatedInstructions", {
+        fetch("/api/updateInstructions", {
             method: 'POST',
             headers: {
                 'Content-Type': 'text/plain',
