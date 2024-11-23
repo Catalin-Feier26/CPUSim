@@ -1,0 +1,71 @@
+/* frontend/src/SelectClock.css */
+.select-clock-container {
+    background-color: #e6efe7;
+    color: #1B4332;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    margin: 0 auto;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.select-clock-container h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #1B4332;
+}
+
+.select-clock-container .checkbox-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.select-clock-container label {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.select-clock-container input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.Submitbtn {
+    background-color: #1B4332;
+    color: #EFE7E6;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.Submitbtn:hover {
+    background-color: #95D5B2;
+    color: #081C15;
+}
+
+.Submitbtn:active {
+    background-color: #363030;
+    color: #EFE7E6;
+}
+
+.checkbox1 {
+    margin-right: 20px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #363030;
+}
+
+.hClock {
+    font-family: "Times New Roman";
+    font-size: 32px;
+    text-align: center;
+    color: #081C15;
+}

@@ -45,7 +45,7 @@ const ModifyInstructions = () => {
                     instructions. The Registers R1 R2 R3 are only examples, they can take
                     values from 0 to 31.
                     For instructions where an immediate value is expected it has to be within the
-                    range of an integer, the same goes for the shift amount. The jump address should be
+                    range of an integer, the same goes for the shift amount. The jump and branch addresses should be
                     the instruction number.</text>
                 <pre className="pre2">{syntaxList}</pre>
             </div>

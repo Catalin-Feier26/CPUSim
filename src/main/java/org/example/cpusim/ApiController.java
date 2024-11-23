@@ -1,14 +1,19 @@
 package org.example.cpusim;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import model.clockType;
 
 @RestController
 public class ApiController {
+
+    private clockType selectedClockType;
 
     @GetMapping("/api/hello")
     public String sayHello() {
@@ -36,6 +41,22 @@ public class ApiController {
         }catch (IOException e){
             e.getMessage();
             return "Error fetching the Instructions Syntax";
+        }
+    }
+    @PostMapping("api/setClockType")
+    public String setClockType(@RequestBody ClockTypeRequest request){
+        this.selectedClockType = request.getClockType();
+        System.out.println("Clock type set to " + selectedClockType);
+        return "Clock type set to " + selectedClockType;
+    }
+
+    public static class ClockTypeRequest{
+        private clockType clockType;
+        public clockType getClockType(){
+            return clockType;
+        }
+        public void setClockType(clockType clockType){
+            this.clockType= clockType;
         }
     }
 }
