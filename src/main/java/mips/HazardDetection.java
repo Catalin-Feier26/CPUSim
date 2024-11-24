@@ -32,6 +32,7 @@ public class HazardDetection {
         return instructionList;
     }
     public void writeDetectedHazardsToFile(String filename) {
+        System.out.println("Starting to write hazards into this file: " + filename);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             for (int i = 0; i < instructionList.size(); i++) {
                 String instruction = instructionList.get(i).toUpperCase();
@@ -46,6 +47,7 @@ public class HazardDetection {
 
                             if (destinationMatchesSources(nextInstruction.split(" "), match)) {
                                 writer.write("RAW Hazard between: " + instruction + " and " + nextInstruction + " because of the " + match.split(" ")[0] + " register");
+                                System.out.println("RAW Hazard between: " + instruction + " and " + nextInstruction + " because of the " + match.split(" ")[0] + " register");
                                 writer.newLine();
                                 break; // Break out of the lookAhead loop
                             }
@@ -68,25 +70,25 @@ public class HazardDetection {
 
             for (int i = 0; i < currentInstructionList.size(); i++) {
                 String instruction = currentInstructionList.get(i).toUpperCase();
-                System.out.println("Processing instruction: " + instruction + " at index " + i);
+                //System.out.println("Processing instruction: " + instruction + " at index " + i);
                 updatedInstructionList.add(instruction);
                 String match = getDestination(instruction);
-                System.out.println("Destination register for " + instruction + ": " + match);
+                //System.out.println("Destination register for " + instruction + ": " + match);
 
                 if (writeInRegister(match.split(" ")[0])) {
                     int nr = Math.min(3, currentInstructionList.size() - i - 1); // Look ahead max 3 or remaining instructions
-                    System.out.println("Looking ahead " + nr + " instructions.");
+                    //System.out.println("Looking ahead " + nr + " instructions.");
 
                     for (int lookAhead = 1; lookAhead <= nr; lookAhead++) {
                         if (i + lookAhead < currentInstructionList.size()) { // Check bounds here
                             String nextInstruction = currentInstructionList.get(i + lookAhead).toUpperCase();
-                            System.out.println("Looking at next instruction: " + nextInstruction + " at index " + (i + lookAhead));
+                            //System.out.println("Looking at next instruction: " + nextInstruction + " at index " + (i + lookAhead));
 
                             if (destinationMatchesSources(nextInstruction.split(" "), match)) {
-                                System.out.println("Hazard detected between: " + instruction + " and " + nextInstruction);
+                                //System.out.println("Hazard detected between: " + instruction + " and " + nextInstruction);
                                 updatedInstructionList.add("NOP");
                                 nopsAdded = true;
-                                System.out.println("NOP added. Continuing to process the next instructions.");
+                                //System.out.println("NOP added. Continuing to process the next instructions.");
                                 break; // Break out of the lookAhead loop
                             }
                         }

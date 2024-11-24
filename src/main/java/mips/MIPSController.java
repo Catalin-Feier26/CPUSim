@@ -29,7 +29,7 @@ public class MIPSController {
 
     public MIPSController() {
         clockType= model.clockType.AUTOMATIC;
-        instructionMemory = new InstructionMemory("FinalInstructionList.txt");
+        instructionMemory = new InstructionMemory("src/main/resources/NewInstructions.txt");
         pc = new ProgramCounter(instructionMemory.getInstructionCount());
         registerFile = new RegisterFile();
         ifidRegister = new IFIDRegister();
@@ -52,7 +52,7 @@ public class MIPSController {
         hazardDetection.writeUpdatedInstructionsToFile("UpdatedInstructions.txt");
 
         // Update instruction memory with the new instructions
-        // instructionMemory.setInstructions(hazardDetection.getUpdatedInstructionList());
+        instructionMemory.setInstructions(hazardDetection.getUpdatedInstructionList());
     }
     public static void main(String[] args) {
         MIPSController mipsController = new MIPSController();
