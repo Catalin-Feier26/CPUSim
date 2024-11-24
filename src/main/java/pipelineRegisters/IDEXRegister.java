@@ -8,6 +8,8 @@ import model.Register;
  *
  */
 public class IDEXRegister {
+    public String instruction="";
+
     private boolean pcSrc;
     private boolean regDst;
     private boolean branch;

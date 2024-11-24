@@ -6,10 +6,16 @@ import pipelineRegisters.EXMEMRegister;
 import pipelineRegisters.MEMWBRegister;
 
 public class MemoryStage {
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE="\u001B[34m";
+    public static final String ANSI_RED = "\u001B[31m";
+
     private EXMEMRegister exmemRegister;
     private MEMWBRegister memwbRegister;
     private DataMemory dataMemory;
     private ProgramCounter programCounter;
+    public String instruction;
 
     private boolean pcSrc;
 
@@ -39,10 +45,10 @@ public class MemoryStage {
         zero=exmemRegister.getZero();
         aluRes=exmemRegister.getAluResult();
         writeData=exmemRegister.getWriteData();
-
+        instruction= exmemRegister.instruction;
     }
 
-    public void execute() {
+    public String execute() {
         getData();
         if (exmemRegister.getMemRead()) {
             readData = dataMemory.readMemory(aluRes);
@@ -55,7 +61,8 @@ public class MemoryStage {
             programCounter.setPC(exmemRegister.getTargetAddress());
         }
         passSignals();
-        prettyPrint();
+        return pretty();
+        //prettyPrint();
     }
     private void passSignals(){
         memwbRegister.setAluResult(aluRes);
@@ -68,6 +75,7 @@ public class MemoryStage {
         memwbRegister.setHi(exmemRegister.getHi());
         memwbRegister.setLo(exmemRegister.getLo());
         memwbRegister.setReadData(readData);
+        memwbRegister.instruction=instruction;
     }
 
     public MEMWBRegister getMemwbRegister() {
@@ -77,14 +85,18 @@ public class MemoryStage {
     public boolean getPcSrc() {
         return pcSrc;
     }
-    public void prettyPrint() {
-        System.out.println("Memory Stage:");
-        System.out.println("Branch: " + branch);
-        System.out.println("Jump: " + jump);
-        System.out.println("Zero: " + zero);
-        System.out.println("ALU Result: " + aluRes);
-        System.out.println("Write Data: " + writeData);
-        System.out.println("Read Data: " + readData);
-        System.out.println("PC Source: " + pcSrc);
+
+    public String pretty() {
+        return ANSI_RED + "MEMORY STAGE\n" + ANSI_RESET +
+                ANSI_YELLOW + "Instruction: " + ANSI_RESET + ANSI_BLUE + instruction + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "Branch: " + ANSI_RESET + ANSI_BLUE + branch + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "Jump: " + ANSI_RESET + ANSI_BLUE + jump + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "Zero Flag: " + ANSI_RESET + ANSI_BLUE + zero + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "ALU Result: " + ANSI_RESET + ANSI_BLUE + aluRes + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "Write Data: " + ANSI_RESET + ANSI_BLUE + writeData + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "Read Data: " + ANSI_RESET + ANSI_BLUE + readData + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "PC Source: " + ANSI_RESET + ANSI_BLUE + pcSrc + ANSI_RESET + "\n" +
+                "---------------------------------------------------\n";
     }
+
 }

@@ -7,7 +7,8 @@ import model.Register;
  * It contains the control signals for the datapath in the MEM/WB pipeline stage
  */
 public class MEMWBRegister {
-   private boolean regWrite;
+    public String instruction="";
+    private boolean regWrite;
    private boolean memToReg;
    private boolean loWrite;
    private boolean hiWrite;

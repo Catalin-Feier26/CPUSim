@@ -6,8 +6,15 @@ import pipelineRegisters.IDEXRegister;
 import pipelineRegisters.EXMEMRegister;
 
 public class InstructionExecute {
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE="\u001B[34m";
+    public static final String ANSI_RED = "\u001B[31m";
+
     private IDEXRegister idexRegister;
     private EXMEMRegister exmemRegister;
+
+    public String instruction="";
 
     private int ALURes;
     private boolean zero;
@@ -43,6 +50,7 @@ public class InstructionExecute {
         this.targetAddress=idexRegister.getJumpAddress();
     }
     private void setOperands(){
+        instruction= idexRegister.instruction;
         writeData= idexRegister.getReadData2();
         operand1=idexRegister.getReadData1();
         operand2=idexRegister.getAluSrc() ? idexRegister.getImmediate() : idexRegister.getReadData2();
@@ -71,9 +79,9 @@ public class InstructionExecute {
         exmemRegister.setWriteData(writeData);
         exmemRegister.setWriteRegister(writeRegister);
         exmemRegister.setTargetAddress(idexRegister.getJumpAddress());
-
+        exmemRegister.instruction=instruction;
     }
-    public void execute() {
+    public String execute() {
         int aluResult = 0;
 
         setOperands();
@@ -124,7 +132,7 @@ public class InstructionExecute {
                 lo = divResult[1];
                 break;
             case UNSPECIFIED:
-                return;
+                return "";
             default:
                 throw new IllegalArgumentException("Unsupported ALU operation: " + idexRegister.getAluOp());
 
@@ -132,15 +140,25 @@ public class InstructionExecute {
         zero = (aluResult == 0);
         ALURes=aluResult;
 
-        printExecutionDetails(operand1, operand2, ALURes, zero);
+        //printExecutionDetails(operand1, operand2, ALURes, zero);
         passControls();
+        return pretty();
     }
-    private void printExecutionDetails(int operand1, int operand2, int result, boolean zero) {
-        System.out.println(String.format("Operand1:   %d", operand1));
-        System.out.println(String.format("Operand2:   %d", operand2));
-        System.out.println(String.format("RESULT:     %d", result));
-        System.out.println(String.format("ZERO:       %b", zero));
+
+    public String pretty() {
+        return ANSI_RED + "INSTRUCTION EXECUTE\n" + ANSI_RESET +
+                ANSI_YELLOW + "Instruction: " + ANSI_RESET + ANSI_BLUE + instruction + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "PC: " + ANSI_RESET + ANSI_BLUE + idexRegister.getPC() + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "Operand1: " + ANSI_RESET + ANSI_BLUE + operand1 + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "Operand2: " + ANSI_RESET + ANSI_BLUE + operand2 + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "ALU Result: " + ANSI_RESET + ANSI_BLUE + ALURes + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "Zero Flag: " + ANSI_RESET + ANSI_BLUE + zero + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "Write Register: " + ANSI_RESET + ANSI_BLUE + writeRegister + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "HI: " + ANSI_RESET + ANSI_BLUE + hi + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "LO: " + ANSI_RESET + ANSI_BLUE + lo + ANSI_RESET + "\n" +
+                "---------------------------------------------------\n";
     }
+
 
     public EXMEMRegister getExmemRegister() {
         return exmemRegister;

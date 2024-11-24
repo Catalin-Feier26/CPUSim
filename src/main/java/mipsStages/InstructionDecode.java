@@ -7,6 +7,7 @@ import pipelineRegisters.IDEXRegister;
 import pipelineRegisters.IFIDRegister;
 import model.*;
 
+
 public class InstructionDecode {
     private IFIDRegister ifidRegister;
     private IDEXRegister idexRegister;
@@ -15,6 +16,10 @@ public class InstructionDecode {
 
     private String instruction;
 
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE="\u001B[34m";
+    public static final String ANSI_RED = "\u001B[31m";
 
     private int readData1;
     private int readData2;
@@ -100,17 +105,22 @@ public class InstructionDecode {
         idexRegister.setLo(registerFile.getLo());
         idexRegister.setHi(registerFile.getHi());
 
+        idexRegister.instruction=instruction;
+
     }
-    public void execute(){
+    public String execute(){
         setInstruction();
-        if(instruction.equals(""))
-            return;
+        if(instruction.equals("")) {
+            setValuesToDefault();
+            return pretty();
+        }
         setPc();
         decodeControlSignals();
         decodeInstruction();
         readFromRegisterFile();
         passControlSignals();
-        prettyPrint();
+        return pretty();
+        //prettyPrint();
     }
 
     public void decodeInstruction() {
@@ -265,6 +275,8 @@ public class InstructionDecode {
         }
     }
     public void prettyPrint() {
+        System.out.println("INSTRUCTION DECODE");
+
         System.out.println("The current instruction is: " + instruction);
         System.out.println("PC: " + pc);
         System.out.println("RS: " + rs);
@@ -277,7 +289,24 @@ public class InstructionDecode {
         System.out.println("Read Data 1: " + readData1);
         System.out.println("Read Data 2: " + readData2);
         System.out.println("Sign Extended: " + signExtended);
+        System.out.println("---------------------------------------------------");
+
     }
+    public String pretty() {
+        return ANSI_RED + "INSTRUCTION DECODE\n" + ANSI_RESET +
+                ANSI_YELLOW + "Instruction: " + ANSI_RESET + ANSI_BLUE + instruction + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "PC: " + ANSI_RESET + ANSI_BLUE + pc + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "RS: " + ANSI_RESET + ANSI_BLUE + rs + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "RT: " + ANSI_RESET + ANSI_BLUE + rt + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "RD: " + ANSI_RESET + ANSI_BLUE + rd + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "Shamt: " + ANSI_RESET + ANSI_BLUE + shamt + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "Immediate: " + ANSI_RESET + ANSI_BLUE + immediate + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "Jump/Branch Address: " + ANSI_RESET + ANSI_BLUE + address + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "Read Data 1: " + ANSI_RESET + ANSI_BLUE + readData1 + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "Read Data 2: " + ANSI_RESET + ANSI_BLUE + readData2 + ANSI_RESET + "\n" +
+                "---------------------------------------------------\n";
+    }
+
 
     public IFIDRegister getIfidRegister() {
         return ifidRegister;

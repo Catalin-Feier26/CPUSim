@@ -4,10 +4,15 @@ import lowComponents.RegisterFile;
 import pipelineRegisters.MEMWBRegister;
 import model.Register;
 
-public class WriteBackStage {
+public class WriteBackStage{
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE="\u001B[34m";
+    public static final String ANSI_RED = "\u001B[31m";
+
     private MEMWBRegister memwbRegister;
     private RegisterFile registerFile;
-
+    public String instruction="";
     private boolean regWrite;
     private boolean memToReg;
     private boolean loWrite, hiWrite;
@@ -42,9 +47,10 @@ public class WriteBackStage {
         hi=memwbRegister.getHi();
         lo=memwbRegister.getLo();
         readData=memwbRegister.getReadData();
+        instruction= memwbRegister.instruction;
     }
 
-    public void execute() {
+    public String execute() {
         fetchFromRegister();
         int writeData = memToReg ? readData : aluResult;
         if(regWrite){
@@ -56,9 +62,11 @@ public class WriteBackStage {
         if(hiWrite){
             registerFile.setHi(hi);
         }
-        prettyPrint();
+        //prettyPrint();
+        return pretty();
     }
     public void prettyPrint() {
+        System.out.println("WRITEBACK STAGE");
         System.out.println("Memory Stage:");
         System.out.println("ALU Result: " + aluResult);
         System.out.println("Write Data: " + writeData);
@@ -69,5 +77,23 @@ public class WriteBackStage {
         System.out.println("Write in LO: " + loWrite);
         System.out.println("AluRes or READData ?" + memToReg);
         System.out.println("write in RF: " + regWrite);
+        System.out.println("---------------------------------------------------");
+
     }
+    public String pretty() {
+        return ANSI_RED + "WRITEBACK STAGE\n" + ANSI_RESET +
+                ANSI_YELLOW + "Instruction: " + ANSI_RESET + ANSI_BLUE + instruction + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "ALU Result: " + ANSI_RESET + ANSI_BLUE + aluResult + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "Write Data: " + ANSI_RESET + ANSI_BLUE + writeData + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "Read Data: " + ANSI_RESET + ANSI_BLUE + readData + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "Write Register: " + ANSI_RESET + ANSI_BLUE + writeRegister + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "HI Register: " + ANSI_RESET + ANSI_BLUE + hi + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "LO Register: " + ANSI_RESET + ANSI_BLUE + lo + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "Write in HI: " + ANSI_RESET + ANSI_BLUE + hiWrite + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "Write in LO: " + ANSI_RESET + ANSI_BLUE + loWrite + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "Memory to Register (MemToReg): " + ANSI_RESET + ANSI_BLUE + memToReg + ANSI_RESET + "\n" +
+                ANSI_YELLOW + "Write to Register File: " + ANSI_RESET + ANSI_BLUE + regWrite + ANSI_RESET + "\n" +
+                "---------------------------------------------------\n";
+    }
+
 }

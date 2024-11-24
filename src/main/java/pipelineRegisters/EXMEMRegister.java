@@ -7,6 +7,7 @@ import model.Register;
  * It contains the control signals for the datapath in the EX/MEM pipeline stage
  */
 public class EXMEMRegister {
+    public String instruction="";
     private static final int DEFAULT_VALUE = 0;
     private static final boolean DEFAULT_FLAG = false;
     private boolean jump;

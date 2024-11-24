@@ -70,7 +70,17 @@ public class ApiController {
             return "Some error occured when fetching updated Instructions";
         }
     }
-
+    @GetMapping("api/finalInstructions")
+    public String getFinalInstructions(){
+        try{
+            String filePath="FinalInstructionList.txt";
+            String finalInstructions=new String(Files.readAllBytes(Paths.get(filePath)));
+            return finalInstructions;
+        }catch (IOException e){
+            e.getMessage();
+            return "Error fetching the final instructions";
+        }
+    }
 
     @PostMapping("api/setClockType")
     public String setClockType(@RequestBody ClockTypeRequest request){
@@ -104,12 +114,6 @@ public class ApiController {
             return  "Error saving instructions.";
         }
     }
-
-
-
-
-
-
 
 
     public static class ClockTypeRequest{

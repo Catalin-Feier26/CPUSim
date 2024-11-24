@@ -3,7 +3,7 @@ package mipsStages;
 import lowComponents.ProgramCounter;
 import lowComponents.InstructionMemory;
 import pipelineRegisters.IFIDRegister;
-
+import java.io.*;
 
 public class InstructionFetch {
     private ProgramCounter pc;
@@ -11,7 +11,13 @@ public class InstructionFetch {
     private IFIDRegister ifidRegister;
 
     private String instruction;
+
     // Made for Testing
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE="\u001B[34m";
+    public static final String ANSI_RED = "\u001B[31m";
+
 
     public InstructionFetch(){
         this.instructionMemory = new InstructionMemory("C:/Users/Zach/Desktop/ComputerS/year3/sem1/structure of computer systems/CPUSim/src/main/resources/instructions.txt");
@@ -27,26 +33,30 @@ public class InstructionFetch {
         this.instruction= "";
     }
     public String fetchInstruction(){
-        this.instruction=instructionMemory.getInstruction(pc.getPC());
-        if(pc.getPC()>= instructionMemory.getInstructionCount())
-            pc.reset();
+        if(pc.getPC() >instructionMemory.getInstructionCount())
+            this.instruction="";
         else
-            pc.incrementPC();
+            this.instruction=instructionMemory.getInstruction(pc.getPC());
+        pc.incrementPC();
         return instruction;
     }
     public void setUpIFIDRegister(){
         ifidRegister.setInstruction(instruction);
         ifidRegister.setPC(pc.getPC());
     }
-    public void execute(){
+    public String execute(){
         fetchInstruction();
         setUpIFIDRegister();
-        prettyPrint();
+        return pretty();
     }
-    public void prettyPrint(){
-        System.out.println("The current instruction is: "+instruction);
-        System.out.println("The PC is: " + pc.getPC());
+
+    public String pretty() {
+        return ANSI_RED + "INSTRUCTION FETCH PHASE\n" + ANSI_RESET +
+                ANSI_BLUE + "Instruction: " + ANSI_RESET + ANSI_YELLOW + instruction + ANSI_RESET + "\n" +
+                ANSI_BLUE + "PC: " + ANSI_RESET + ANSI_YELLOW + pc.getPC() + ANSI_RESET + "\n" +
+                "---------------------------------------------------\n";
     }
+
 
     public IFIDRegister getIfidRegister(){
         return ifidRegister;

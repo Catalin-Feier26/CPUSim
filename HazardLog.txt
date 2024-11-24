@@ -1,1 +1,0 @@
-RAW Hazard between: ADD R1 R2 R3 and ADD R3 R1 R2 because of the R1 register
