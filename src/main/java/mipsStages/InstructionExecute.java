@@ -140,9 +140,14 @@ public class InstructionExecute {
         zero = (aluResult == 0);
         ALURes=aluResult;
 
-        //printExecutionDetails(operand1, operand2, ALURes, zero);
         passControls();
         return pretty();
+    }
+    public String getExecutionDetails(){
+        return "Operand1:\t" + operand1 + "\n" +
+                "Operand2:\t" + operand2 + "\n" +
+                "Operation:\t" + idexRegister.getAluOp().name()+
+                "Result:\t" + ALURes + "\n";
     }
 
     public String pretty() {

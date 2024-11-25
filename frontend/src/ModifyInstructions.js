@@ -43,7 +43,7 @@ const ModifyInstructions = () => {
 
     return (
         <div className="modify-instructions">
-            <div className="instructions-section">
+            <div className="instructions-section1">
                 <h2>Current Instructions</h2>
                 <textarea
                     value={newInstructions}

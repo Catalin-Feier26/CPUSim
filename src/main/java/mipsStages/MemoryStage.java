@@ -5,6 +5,8 @@ import lowComponents.ProgramCounter;
 import pipelineRegisters.EXMEMRegister;
 import pipelineRegisters.MEMWBRegister;
 
+import java.util.HashMap;
+
 public class MemoryStage {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_YELLOW = "\u001B[33m";
@@ -84,6 +86,9 @@ public class MemoryStage {
 
     public boolean getPcSrc() {
         return pcSrc;
+    }
+    public HashMap<Integer,Integer> getDataMemory(){
+        return dataMemory.getMemory();
     }
 
     public String pretty() {

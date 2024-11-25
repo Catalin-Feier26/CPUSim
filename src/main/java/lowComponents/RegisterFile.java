@@ -76,6 +76,9 @@ public class RegisterFile {
     public void setLo(int value) {
         Lo = value;
     }
+    public HashMap<Register, Integer> getRegisters(){
+        return registers;
+    }
     /**
      * Gets the value of the Lo register.
      * @return int The value of the Lo register.

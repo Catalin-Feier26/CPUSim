@@ -1,5 +1,8 @@
 package org.example.cpusim;
 
+import model.Register;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,38 +12,64 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import model.clockType;
 import mips.MIPSController;
 
 @RestController
+@ComponentScan(basePackages = {"org.example.cpusim", "mips"})
 public class ApiController {
 
     private clockType selectedClockType;
+    private MIPSController mips;
 
-    @GetMapping("/api/hello")
-    public String sayHello() {
-        return "MIPS 32 BITS PIPELINE ARCHITECTURE IS SUPERIOR!";
+    @Autowired
+    public ApiController(MIPSController mips){
+        this.mips=mips;
     }
 
     @GetMapping("/api/instructions")
     public String getInstructions(){
         try{
             String filePath = "C:/Users/Zach/Desktop/ComputerS/year3/sem1/structure of computer systems/CPUSim/src/main/resources/instructions.txt";
-            String instructions = new String(Files.readAllBytes(Paths.get(filePath)));
 
-            return instructions;
+            return new String(Files.readAllBytes(Paths.get(filePath)));
         }catch (IOException e){
-            e.getMessage();
-            return "Error reading instructions file.";
+            return e.getMessage();
         }
     }
+    @GetMapping("api/registerFile")
+    public HashMap<String, Integer> getRegisterFile() {
+        HashMap<String, Integer> registerMap = new HashMap<>();
+        HashMap<Register, Integer> registerFileData = mips.getRegisterFileData();
+        for (Map.Entry<Register, Integer> entry : registerFileData.entrySet()) {
+            registerMap.put(entry.getKey().name(), entry.getValue());
+        }
+        return registerMap;
+    }
+    @GetMapping("/api/memoryData")
+    public HashMap<String, Integer> getMemoryData() {
+        HashMap<String, Integer> memoryMap = new HashMap<>();
+        HashMap<Integer, Integer> memoryData = mips.getMemory();
+
+        for (Map.Entry<Integer, Integer> entry : memoryData.entrySet()) {
+            memoryMap.put("Address " + entry.getKey(), entry.getValue());
+        }
+
+        return memoryMap;
+    }
+
+
     @GetMapping("/api/syntax")
     public String getSyntax(){
         try{
             String filePath="src/main/resources/syntax.txt";
-            String syntax = new String(Files.readAllBytes(Paths.get(filePath)));
-            return syntax;
+            return new String(Files.readAllBytes(Paths.get(filePath)));
         }catch (IOException e){
             e.getMessage();
             return "Error fetching the Instructions Syntax";
@@ -48,8 +77,8 @@ public class ApiController {
     }
     @GetMapping("api/hazardLogs")
     public String getHazardLogs(){
-        new MIPSController();
-        //MIPSController.hazardCaller();
+        MIPSController mipsController=new MIPSController();
+        mipsController.solveHazards();
         try{
             String filePath="HazardLog.txt";
             String logs = new String(Files.readAllBytes(Paths.get(filePath)));
@@ -59,6 +88,11 @@ public class ApiController {
             return "Error getting the hazards logs!";
         }
     }
+    @GetMapping("api/mips")
+    public void startMips(){
+
+    }
+
     @GetMapping("api/updatedInstructions")
     public String getUpdatedInstructions(){
         try{
@@ -68,6 +102,18 @@ public class ApiController {
         }catch (IOException e){
             e.getMessage();
             return "Some error occured when fetching updated Instructions";
+        }
+    }
+    @GetMapping("api/arrayInstructions")
+    public List<String> getInstructionsAsArray(){
+        List<String> instructions;
+        try{
+            String filePath="FinalInstructionList.txt";
+            instructions=Files.readAllLines(Paths.get(filePath));
+            return instructions;
+        }catch (IOException e){
+            System.err.println("Error fetching the instructions");
+            return null;
         }
     }
     @GetMapping("api/finalInstructions")
@@ -81,6 +127,11 @@ public class ApiController {
             return "Error fetching the final instructions";
         }
     }
+    @GetMapping("api/aluData")
+    public String getAluData() {
+        return mips.getExecutionDetails();
+    }
+
 
     @PostMapping("api/setClockType")
     public String setClockType(@RequestBody ClockTypeRequest request){
@@ -88,6 +139,7 @@ public class ApiController {
         System.out.println("Clock type set to " + selectedClockType);
         return "Clock type set to " + selectedClockType;
     }
+
     @PostMapping ("api/updateInstructions")
     public String updatedInstructions(@RequestBody String instructions){
         String filePath="FinalInstructionList.txt";
@@ -114,7 +166,6 @@ public class ApiController {
             return  "Error saving instructions.";
         }
     }
-
 
     public static class ClockTypeRequest{
         private clockType clockType;
