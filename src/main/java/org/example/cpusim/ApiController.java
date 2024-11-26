@@ -120,12 +120,9 @@ public class ApiController {
     @PostMapping("api/stop")
     public String stopMips() {
         if (simulationThread != null && simulationThread.isAlive()) {
-            mips.setIsRunning(false);
-            try {
-                simulationThread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            mips.setIsRunning(false);  // Stop the simulation
+            simulationThread.interrupt();  // Interrupt the thread if necessary
+            // No need to call join() here, just let the thread finish on its own
             System.out.println("Simulation Stopped");
             return "Simulation stopped.";
         } else {
@@ -133,6 +130,7 @@ public class ApiController {
             return "Simulation is not running.";
         }
     }
+
 
     @PostMapping("api/nextCycle")
     public String nextCycle() {

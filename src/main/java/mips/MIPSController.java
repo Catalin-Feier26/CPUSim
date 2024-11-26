@@ -36,7 +36,7 @@ public class MIPSController implements Runnable {
 
     public MIPSController() {
         clockType= model.clockType.AUTOMATIC;
-        instructionMemory = new InstructionMemory("src/main/resources/NewInstructions.txt");
+        instructionMemory = new InstructionMemory();
         pc = new ProgramCounter(instructionMemory.getInstructionCount());
         registerFile = new RegisterFile();
         ifidRegister = new IFIDRegister();
@@ -50,8 +50,8 @@ public class MIPSController implements Runnable {
         instructionExecute = new InstructionExecute(idexRegister, exmemRegister);
         memoryStage = new MemoryStage(exmemRegister, memwbRegister, new DataMemory(), pc);
         writeBackStage = new WriteBackStage(memwbRegister, registerFile);
-
-         hazardDetection = new HazardDetection(instructionMemory.getInstructions());
+        instructionMemory.loadInstructions("src/main/resources/SimulationInstructions.txt");
+         hazardDetection = new HazardDetection(new InstructionMemory("src/main/resources/NewInstructions.txt").getInstructions());
     }
     public void resetMips(){
         registerFile.reset();

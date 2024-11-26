@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import MIPS from "./MIPS.svg";
 import './SimulationPage.css'
 
@@ -35,17 +35,17 @@ const SimulationPage = () => {
 
     const startPolling = () => {
         if (!pollingInterval) {
-            const intervalId = setInterval(fetchSimulationData, 100); // Fetch every second
+            const intervalId = setInterval(fetchSimulationData, 500); // Fetch every second
             setPollingInterval(intervalId);
         }
     };
 
-    const stopPolling = () => {
+    const stopPolling = useCallback(() => {
         if (pollingInterval) {
             clearInterval(pollingInterval);
             setPollingInterval(null);
         }
-    };
+    }, [pollingInterval]);
 
     const startSimulation = () => {
         fetch("/api/start", { method: "POST" })
@@ -88,7 +88,7 @@ const SimulationPage = () => {
     useEffect(() => {
         // Clean up polling on component unmount
         return () => stopPolling();
-    }, []);
+    }, [stopPolling]);
 
     return (
         <div className="simulation-page">
