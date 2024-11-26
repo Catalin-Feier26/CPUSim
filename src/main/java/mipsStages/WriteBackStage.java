@@ -37,6 +37,21 @@ public class WriteBackStage{
         readData=0;
         writeData=0;
     }
+    public void reset() {
+        instruction = "";
+        regWrite = false;
+        memToReg = false;
+        loWrite = false;
+        hiWrite = false;
+
+        // Reset registers and data
+        writeRegister = Register.R0;
+        aluResult = 0;
+        hi = 0;
+        lo = 0;
+        readData = 0;
+        writeData = 0;
+    }
     private void fetchFromRegister(){
         this.regWrite=memwbRegister.getRegWrite();
         this.memToReg=memwbRegister.getMemToReg();

@@ -9,20 +9,56 @@ const SimulationPage = () => {
     const [memoryData, setMemoryData] = useState([]);
     const [isRunning, setIsRunning] = useState(false);
 
-    const startSimulation = () => {
-        fetch("/api/start", {
-            method: "POST",
-        }).then(response => {
-            setIsRunning(true);
-        }).catch(error => console.error("Error starting the simulation", error));
+    // Interval ID for polling
+    const [pollingInterval, setPollingInterval] = useState(null);
+
+    const fetchSimulationData = async () => {
+        try {
+            const [instructionsResponse, registerResponse, aluResponse, memoryResponse] = await Promise.all([
+                fetch("/api/arrayInstructions").then(res => res.json()),
+                fetch("/api/registerFile").then(res => res.json()),
+                fetch("/api/aluData").then(res => res.text()),
+                fetch("/api/memoryData").then(res => res.json()),
+            ]);
+
+            setInstructions(Array.isArray(instructionsResponse) ? instructionsResponse : []);
+            setRegisterFile(Object.entries(registerResponse).map(([key, value]) => `${key}: ${value} `));
+            setAluData(aluResponse || "No ALU data available.");
+            setMemoryData(Object.entries(memoryResponse));
+        } catch (error) {
+            console.error("Error fetching simulation data:", error);
+        }
     };
+
+    const startPolling = () => {
+        if (!pollingInterval) {
+            const intervalId = setInterval(fetchSimulationData, 1000); // Fetch every second
+            setPollingInterval(intervalId);
+        }
+    };
+
+    const stopPolling = () => {
+        if (pollingInterval) {
+            clearInterval(pollingInterval);
+            setPollingInterval(null);
+        }
+    };
+
+    const startSimulation = () => {
+        fetch("/api/start", { method: "POST" })
+            .then(() => {
+                setIsRunning(true);
+                startPolling(); // Start updating data
+            })
+            .catch(error => console.error("Error starting the simulation", error));
+    };
+
     const stopSimulation = async () => {
         try {
-            const response = await fetch('/api/stop', {
-                method: 'POST',
-            });
+            const response = await fetch('/api/stop', { method: 'POST' });
             if (response.ok) {
                 setIsRunning(false);
+                stopPolling(); // Stop updating data
                 console.log("Simulation stopped successfully.");
             } else {
                 console.error("Failed to stop simulation.");
@@ -31,15 +67,15 @@ const SimulationPage = () => {
             console.error("Error stopping simulation:", error);
         }
     };
+
     const nextClockCycle = async () => {
         try {
-            const response = await fetch('/api/nextCycle', {
-                method: 'POST',
-            });
+            const response = await fetch('/api/nextCycle', { method: 'POST' });
             if (response.ok) {
+                await fetchSimulationData(); // Update data immediately after cycle
                 console.log("Next cycle executed.");
             } else {
-                console.error("Failed to execute next cycle. Simulation may not be running or not in manual mode.");
+                console.error("Failed to execute next cycle.");
             }
         } catch (error) {
             console.error("Error executing next cycle:", error);
@@ -47,26 +83,8 @@ const SimulationPage = () => {
     };
 
     useEffect(() => {
-        fetch("/api/arrayInstructions")
-            .then(response => response.json())
-            .then(data => setInstructions(Array.isArray(data) ? data : []));
-
-        fetch("/api/registerFile")
-            .then(response => response.json())
-            .then(data => {
-                const formattedData = Object.entries(data).map(([key, value]) => `${key}: ${value} `);
-                setRegisterFile(formattedData.length ? formattedData : [""]);
-            });
-
-        fetch("/api/aluData")
-            .then((response) => response.text()) // Use .text() instead of .json() since the backend sends a plain string
-            .then((data) => setAluData(data || "No ALU data available."));
-
-        fetch("/api/memoryData")
-            .then(response => response.json())
-            .then(data => setMemoryData(Object.entries(data)))
-            .catch(error => console.error("Error fetching memory data:", error));
-
+        // Clean up polling on component unmount
+        return () => stopPolling();
     }, []);
 
     return (
@@ -99,18 +117,18 @@ const SimulationPage = () => {
                 <div className="memory-data">
                     <h2>Memory Data</h2>
                     <ul>
-                        {memoryData.map((data, index) => (
-                            <li key={index}>{data}</li>
+                        {memoryData.map(([address, value], index) => (
+                            <li key={index}>{`Address: ${address}, Value: ${value}`}</li>
                         ))}
                     </ul>
                 </div>
             </div>
             <div className="mips-section">
-                <img src={MIPS} className="App-logo" alt="MIPS Diagram"/>
+                <img src={MIPS} className="App-logo" alt="MIPS Diagram" />
                 <div className="buttons">
-                    <button  className="btn"  onClick={startSimulation} disabled={isRunning}>Start</button>
-                    <button  className="btn" onClick={nextClockCycle} disabled={!isRunning}>Next</button>
-                    <button  className="btn" onClick ={stopSimulation} disabled={!isRunning}>Stop</button>
+                    <button className="btn" onClick={startSimulation} disabled={isRunning}>Start</button>
+                    <button className="btn" onClick={nextClockCycle} disabled={!isRunning}>Next</button>
+                    <button className="btn" onClick={stopSimulation} disabled={!isRunning}>Stop</button>
                 </div>
             </div>
         </div>

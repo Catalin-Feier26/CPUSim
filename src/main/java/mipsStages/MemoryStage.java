@@ -87,6 +87,17 @@ public class MemoryStage {
     public boolean getPcSrc() {
         return pcSrc;
     }
+    public void reset() {
+        instruction = "";
+        pcSrc = false;
+        branch = false;
+        jump = false;
+        zero = false;
+        aluRes = 0;
+        writeData = 0;
+        readData = 0;
+
+    }
     public HashMap<Integer,Integer> getDataMemory(){
         return dataMemory.getMemory();
     }

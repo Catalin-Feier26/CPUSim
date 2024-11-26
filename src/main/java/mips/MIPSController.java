@@ -50,7 +50,20 @@ public class MIPSController implements Runnable {
 
          hazardDetection = new HazardDetection(instructionMemory.getInstructions());
     }
-
+    public void resetMips(){
+        registerFile.reset();
+        pc.reset();
+        ifidRegister.reset();
+        idexRegister.reset();
+        exmemRegister.reset();
+        memwbRegister.reset();
+        controlUnit.reset();
+        instructionFetch.reset();
+        instructionDecode.reset();
+        instructionExecute.reset();
+        memoryStage.reset();
+        writeBackStage.reset();
+    }
     public void solveHazards(){
         System.out.println("Calling from the new method :U");
         hazardDetection.writeDetectedHazardsToFile("HazardLog.txt");

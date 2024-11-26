@@ -81,6 +81,25 @@ public class InstructionExecute {
         exmemRegister.setTargetAddress(idexRegister.getJumpAddress());
         exmemRegister.instruction=instruction;
     }
+    public void reset() {
+        instruction = "";
+        PC = 0;
+
+        ALURes = 0;
+        zero = false;
+        hi = 0;
+        lo = 0;
+
+        targetAddress = 0;
+        writeRegister = Register.R0;
+        targetRegister = Register.R0;
+        destinationRegister = Register.R0;
+
+        writeData = 0;
+        operand1 = 0;
+        operand2 = 0;
+        exmemRegister.reset(); // Assuming that EXMEMRegister has a reset method
+    }
     public String execute() {
         int aluResult = 0;
 

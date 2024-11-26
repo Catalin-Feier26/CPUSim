@@ -53,6 +53,13 @@ public class InstructionDecode {
         address=0;
         pc=0;
     }
+    public void reset(){
+        instruction="";
+        this.pc=0;
+        setValuesToDefault();;
+        readData1=0;
+        readData2=0;
+    }
     private void setValuesToDefault(){
         readData1=0;
         readData2=0;

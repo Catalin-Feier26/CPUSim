@@ -56,7 +56,11 @@ public class InstructionFetch {
                 ANSI_BLUE + "PC: " + ANSI_RESET + ANSI_YELLOW + pc.getPC() + ANSI_RESET + "\n" +
                 "---------------------------------------------------\n";
     }
-
+    public void reset() {
+        instruction = "";
+        pc.setPC(0);
+        ifidRegister.reset();
+    }
 
     public IFIDRegister getIfidRegister(){
         return ifidRegister;

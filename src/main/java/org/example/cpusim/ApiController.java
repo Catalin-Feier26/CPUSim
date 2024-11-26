@@ -92,6 +92,7 @@ public class ApiController {
     }
     @PostMapping("api/start")
     public String startSimulation() {
+        mips.resetMips();
         if (simulationThread == null || !simulationThread.isAlive()) {
             mips.setClockType(selectedClockType);  // Set clock type (manual/automatic)
             mips.setIsRunning(true);  // Start the simulation
