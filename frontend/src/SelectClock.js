@@ -51,7 +51,7 @@ const SelectClock = () => {
                         checked={clockType === 'MANUAL'}
                         onChange={handleClockChange}
                     />
-                    Manual (press key)
+                    Manual (press "Next" button)
                 </label>
             </div>
             <button className="Submitbtn" onClick={handleSubmit}>Submit</button>

@@ -7,6 +7,44 @@ const SimulationPage = () => {
     const [registerFile, setRegisterFile] = useState([]);
     const [aluData, setAluData] = useState("");
     const [memoryData, setMemoryData] = useState([]);
+    const [isRunning, setIsRunning] = useState(false);
+
+    const startSimulation = () => {
+        fetch("/api/start", {
+            method: "POST",
+        }).then(response => {
+            setIsRunning(true);
+        }).catch(error => console.error("Error starting the simulation", error));
+    };
+    const stopSimulation = async () => {
+        try {
+            const response = await fetch('/api/stop', {
+                method: 'POST',
+            });
+            if (response.ok) {
+                setIsRunning(false);
+                console.log("Simulation stopped successfully.");
+            } else {
+                console.error("Failed to stop simulation.");
+            }
+        } catch (error) {
+            console.error("Error stopping simulation:", error);
+        }
+    };
+    const nextClockCycle = async () => {
+        try {
+            const response = await fetch('/api/nextCycle', {
+                method: 'POST',
+            });
+            if (response.ok) {
+                console.log("Next cycle executed.");
+            } else {
+                console.error("Failed to execute next cycle. Simulation may not be running or not in manual mode.");
+            }
+        } catch (error) {
+            console.error("Error executing next cycle:", error);
+        }
+    };
 
     useEffect(() => {
         fetch("/api/arrayInstructions")
@@ -70,9 +108,9 @@ const SimulationPage = () => {
             <div className="mips-section">
                 <img src={MIPS} className="App-logo" alt="MIPS Diagram"/>
                 <div className="buttons">
-                    <button  className="btn"  onClick={() => console.log("Start clicked")}>Start</button>
-                    <button  className="btn">Next</button>
-                    <button  className="btn">Stop</button>
+                    <button  className="btn"  onClick={startSimulation} disabled={isRunning}>Start</button>
+                    <button  className="btn" onClick={nextClockCycle} disabled={!isRunning}>Next</button>
+                    <button  className="btn" onClick ={stopSimulation} disabled={!isRunning}>Stop</button>
                 </div>
             </div>
         </div>

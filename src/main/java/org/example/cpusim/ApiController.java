@@ -27,6 +27,8 @@ public class ApiController {
 
     private clockType selectedClockType;
     private MIPSController mips;
+    private boolean isRunning=false;
+    private Thread simulationThread;
 
     @Autowired
     public ApiController(MIPSController mips){
@@ -88,9 +90,48 @@ public class ApiController {
             return "Error getting the hazards logs!";
         }
     }
-    @GetMapping("api/mips")
-    public void startMips(){
+    @PostMapping("api/start")
+    public String startSimulation() {
+        if (simulationThread == null || !simulationThread.isAlive()) {
+            mips.setClockType(selectedClockType);  // Set clock type (manual/automatic)
+            mips.setIsRunning(true);  // Start the simulation
+            simulationThread = new Thread(mips);  // Start a new thread for simulation
+            simulationThread.start();
+            System.out.println("Simulation started running");
+            return "Simulation started in ";
+        } else {
+            System.out.println("Simulation is already running");
+            return "Simulation is already running.";
+        }
+    }
 
+
+    @PostMapping("api/stop")
+    public String stopMips() {
+        if (simulationThread != null && simulationThread.isAlive()) {
+            mips.setIsRunning(false);
+            try {
+                simulationThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Simulation Stopped");
+            return "Simulation stopped.";
+        } else {
+            System.out.println("Simulation is not running");
+            return "Simulation is not running.";
+        }
+    }
+    @PostMapping("api/nextCycle")
+    public String nextCycle() {
+        if (simulationThread != null && simulationThread.isAlive()) {
+            mips.nextIsPressed();
+            System.out.println("NEXT CYCLE");
+            return "Next cycle executed.";
+        } else {
+            System.out.println("Simulation is NOT RUNNING or NOT in MANUAL mode");
+            return "Simulation is not running or not in manual mode.";
+        }
     }
 
     @GetMapping("api/updatedInstructions")
@@ -137,6 +178,7 @@ public class ApiController {
     public String setClockType(@RequestBody ClockTypeRequest request){
         this.selectedClockType = request.getClockType();
         System.out.println("Clock type set to " + selectedClockType);
+        mips.setClockType(selectedClockType);
         return "Clock type set to " + selectedClockType;
     }
 
@@ -166,6 +208,7 @@ public class ApiController {
             return  "Error saving instructions.";
         }
     }
+
 
     public static class ClockTypeRequest{
         private clockType clockType;

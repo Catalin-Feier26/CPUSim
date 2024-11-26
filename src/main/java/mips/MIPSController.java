@@ -10,8 +10,10 @@ import model.clockType;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MIPSController {
+public class MIPSController implements Runnable {
     private clockType clockType;
+    private volatile boolean isRunning=false;
+
     private ProgramCounter pc;
     private InstructionMemory instructionMemory;
     private RegisterFile registerFile;
@@ -71,41 +73,60 @@ public class MIPSController {
         System.out.println(cycleOutput);
         System.out.println("===== Clock Cycle End =====\n");
     }
-    public void runManualMips(){
-        Scanner scanner= new Scanner(System.in);
-        while(true){
-            String input=scanner.nextLine();
-            if(!"1".equals(input)){
-                System.out.println("Exiting simulation....");
-                break;
-            }
-            executeClockCycle();
-        }
-        scanner.close();
-    }
-    public void runAutomaticMips(){
-        while(true){
-            executeClockCycle();
-            try{
-                Thread.sleep(1000);
-            }catch (InterruptedException e){
-                e.getMessage();
-                System.out.println("Some Thread Error Occured.");
-                break;
+    public synchronized void runManualMips() {
+        while (isRunning) {
+            try {
+                wait();
+                if (Thread.currentThread().isInterrupted()) {
+                    System.out.println("Manual mode interrupted, stopping...");
+                    break;  // Stop the loop if interrupted
+                }
+                executeClockCycle();
+            } catch (InterruptedException e) {
+                System.out.println("Manual mode interrupted: " + e.getMessage());
+                break;  // Exit the loop on interrupt
             }
         }
     }
-    public void startMIPS(clockType clockType){
-        if(clockType== model.clockType.MANUAL) {
+
+    public synchronized void nextIsPressed() {
+        notifyAll();
+    }
+
+    public void runAutomaticMips() {
+        while (isRunning) {
+            try {
+                executeClockCycle();
+                if (Thread.currentThread().isInterrupted()) {
+                    System.out.println("Automatic mode interrupted, stopping...");
+                    break;  // Exit if interrupted
+                }
+                Thread.sleep(1000);  // Simulate a 1-second cycle
+            } catch (InterruptedException e) {
+                System.out.println("Some thread error occurred: " + e.getMessage());
+                break;  // Exit the loop if interrupted
+            }
+        }
+    }
+
+    public void run(){
+        if(clockType== model.clockType.MANUAL){
             runManualMips();
-            return;
-        }
-        runAutomaticMips();
+        }else
+            runAutomaticMips();
     }
     public String getExecutionDetails(){
         return instructionExecute.getExecutionDetails();
     }
+
+    public void setClockType(model.clockType clockType) {
+        this.clockType = clockType;
+    }
+
     public HashMap<Integer,Integer> getMemory(){
         return this.memoryStage.getDataMemory();
+    }
+    public void setIsRunning(boolean isRunning){
+        this.isRunning=isRunning;
     }
 }

@@ -146,7 +146,7 @@ public class InstructionExecute {
     public String getExecutionDetails(){
         return "Operand1:\t" + operand1 + "\n" +
                 "Operand2:\t" + operand2 + "\n" +
-                "Operation:\t" + idexRegister.getAluOp().name()+
+                "ALUOP:\t" + idexRegister.getAluOp().name()+ "\n"+
                 "Result:\t" + ALURes + "\n";
     }
 
