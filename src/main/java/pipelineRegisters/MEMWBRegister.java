@@ -8,6 +8,8 @@ import model.Register;
  */
 public class MEMWBRegister {
     public String instruction="";
+    public int instructionIndex=-1;
+
     private boolean regWrite;
    private boolean memToReg;
    private boolean loWrite;
@@ -54,6 +56,9 @@ public class MEMWBRegister {
         memToReg = false;
         aluResult = 0;
         readData = 0;
+
+        instruction="";
+        instructionIndex=-1;
     }
     public boolean getLoWrite() {
         return loWrite;

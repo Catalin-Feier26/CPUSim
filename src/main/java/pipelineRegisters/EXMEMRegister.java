@@ -8,6 +8,8 @@ import model.Register;
  */
 public class EXMEMRegister {
     public String instruction="";
+    public int instructionIndex=-1;
+
     private static final int DEFAULT_VALUE = 0;
     private static final boolean DEFAULT_FLAG = false;
     private boolean jump;

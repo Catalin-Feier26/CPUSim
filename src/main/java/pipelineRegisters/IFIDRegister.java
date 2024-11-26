@@ -8,6 +8,7 @@ package pipelineRegisters;
 public class IFIDRegister {
     private int PC;
     private String instruction;
+    public int instructionIndex=-1;
 
     /**
      * Constructor for the IFIDRegister class.
@@ -32,6 +33,7 @@ public class IFIDRegister {
      * Resets the content of the IF/ID Register to 0 and an empty string.
      */
     public void reset(){
+        instructionIndex=-1;
         this.PC = 0;
         this.instruction = "";
     }

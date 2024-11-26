@@ -15,6 +15,7 @@ public class InstructionExecute {
     private EXMEMRegister exmemRegister;
 
     public String instruction="";
+    public int instructionIndex=-1;
 
     private int ALURes;
     private boolean zero;
@@ -44,6 +45,7 @@ public class InstructionExecute {
         PC=0;
     }
     private void fetchFromIDEXRegister(){
+        instructionIndex=idexRegister.instructionIndex;
         this.PC=idexRegister.getPC();
         this.targetRegister=idexRegister.getRt();
         this.destinationRegister=idexRegister.getRd();
@@ -79,12 +81,14 @@ public class InstructionExecute {
         exmemRegister.setWriteData(writeData);
         exmemRegister.setWriteRegister(writeRegister);
         exmemRegister.setTargetAddress(idexRegister.getJumpAddress());
+
         exmemRegister.instruction=instruction;
+        exmemRegister.instructionIndex=instructionIndex;
     }
     public void reset() {
         instruction = "";
         PC = 0;
-
+        instructionIndex=-1;
         ALURes = 0;
         zero = false;
         hi = 0;
@@ -99,6 +103,9 @@ public class InstructionExecute {
         operand1 = 0;
         operand2 = 0;
         exmemRegister.reset(); // Assuming that EXMEMRegister has a reset method
+    }
+    public String getInstruction(){
+        return instruction;
     }
     public String execute() {
         int aluResult = 0;

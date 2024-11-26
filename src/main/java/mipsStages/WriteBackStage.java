@@ -12,7 +12,10 @@ public class WriteBackStage{
 
     private MEMWBRegister memwbRegister;
     private RegisterFile registerFile;
+
     public String instruction="";
+    public int instructionIndex=-1;
+
     private boolean regWrite;
     private boolean memToReg;
     private boolean loWrite, hiWrite;
@@ -51,6 +54,8 @@ public class WriteBackStage{
         lo = 0;
         readData = 0;
         writeData = 0;
+
+        instructionIndex=-1;
     }
     private void fetchFromRegister(){
         this.regWrite=memwbRegister.getRegWrite();
@@ -79,6 +84,9 @@ public class WriteBackStage{
         }
         //prettyPrint();
         return pretty();
+    }
+    public String getInstruction(){
+        return  instruction;
     }
     public void prettyPrint() {
         System.out.println("WRITEBACK STAGE");

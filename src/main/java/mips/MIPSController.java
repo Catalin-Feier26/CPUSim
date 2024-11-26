@@ -4,7 +4,10 @@ import lowComponents.*;
 import model.Register;
 import pipelineRegisters.*;
 import mipsStages.*;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 import model.clockType;
 import org.springframework.stereotype.Service;
@@ -70,6 +73,7 @@ public class MIPSController implements Runnable {
         hazardDetection.detectAndSolveHazards();
         hazardDetection.writeUpdatedInstructionsToFile("UpdatedInstructions.txt");
         instructionMemory.setInstructions(hazardDetection.getUpdatedInstructionList());
+        instructionMemory.loadInstructions("FinalInstructionList.txt");
     }
     public HashMap<Register,Integer> getRegisterFileData(){
         return this.registerFile.getRegisters();
@@ -123,6 +127,7 @@ public class MIPSController implements Runnable {
     }
 
     public void run(){
+        instructionMemory.loadInstructions("src/main/resources/SimulationInstructions.txt");
         if(clockType== model.clockType.MANUAL){
             runManualMips();
         }else
@@ -142,4 +147,22 @@ public class MIPSController implements Runnable {
     public void setIsRunning(boolean isRunning){
         this.isRunning=isRunning;
     }
+    public void updateInstructionMemort(String fileName){
+        instructionMemory=new InstructionMemory(fileName);
+    }
+    public List<Integer> activeInstructionsIndexes(){
+        List<Integer> activeIndexes= new ArrayList<>();
+        if(instructionFetch.instructionIndex != -1)
+            activeIndexes.add(instructionFetch.instructionIndex);
+        if(instructionDecode.instructionIndex != -1)
+            activeIndexes.add(instructionDecode.instructionIndex);
+        if(instructionExecute.instructionIndex != -1)
+            activeIndexes.add(instructionExecute.instructionIndex);
+        if(memoryStage.instructionIndex != -1)
+            activeIndexes.add(memoryStage.instructionIndex);
+        if(writeBackStage.instructionIndex != -1)
+            activeIndexes.add(writeBackStage.instructionIndex);
+        return activeIndexes;
+    }
+
 }

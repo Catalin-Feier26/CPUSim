@@ -15,6 +15,7 @@ public class InstructionDecode {
     private ControlUnit controlUnit;
 
     private String instruction;
+    public int instructionIndex=-1;
 
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_YELLOW = "\u001B[33m";
@@ -61,6 +62,7 @@ public class InstructionDecode {
         readData2=0;
     }
     private void setValuesToDefault(){
+        instructionIndex=-1;
         readData1=0;
         readData2=0;
         signExtended=0;
@@ -74,6 +76,7 @@ public class InstructionDecode {
     }
     private void setInstruction(){
         this.instruction=this.ifidRegister.getInstruction();
+        this.instructionIndex= ifidRegister.instructionIndex;
     }
     private void setPc(){
         this.pc = this.ifidRegister.getPC();
@@ -113,7 +116,11 @@ public class InstructionDecode {
         idexRegister.setHi(registerFile.getHi());
 
         idexRegister.instruction=instruction;
+        idexRegister.instructionIndex=instructionIndex;
 
+    }
+    public String getInstruction(){
+        return instruction;
     }
     public String execute(){
         setInstruction();

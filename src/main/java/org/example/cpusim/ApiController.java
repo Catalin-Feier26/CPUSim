@@ -3,6 +3,7 @@ package org.example.cpusim;
 import model.Register;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,6 +46,12 @@ public class ApiController {
             return e.getMessage();
         }
     }
+
+    @GetMapping("/api/currentInstructionIndex")
+    public List<Integer> getActiveInstructions() {
+        return mips.activeInstructionsIndexes();
+    }
+
     @GetMapping("api/registerFile")
     public HashMap<String, Integer> getRegisterFile() {
         HashMap<String, Integer> registerMap = new HashMap<>();
@@ -54,6 +61,7 @@ public class ApiController {
         }
         return registerMap;
     }
+
     @GetMapping("/api/memoryData")
     public HashMap<String, Integer> getMemoryData() {
         HashMap<String, Integer> memoryMap = new HashMap<>();
@@ -77,6 +85,7 @@ public class ApiController {
             return "Error fetching the Instructions Syntax";
         }
     }
+
     @GetMapping("api/hazardLogs")
     public String getHazardLogs(){
         MIPSController mipsController=new MIPSController();
@@ -90,9 +99,11 @@ public class ApiController {
             return "Error getting the hazards logs!";
         }
     }
+
     @PostMapping("api/start")
     public String startSimulation() {
         mips.resetMips();
+        mips.updateInstructionMemort("FinalInstructionList.txt");
         if (simulationThread == null || !simulationThread.isAlive()) {
             mips.setClockType(selectedClockType);  // Set clock type (manual/automatic)
             mips.setIsRunning(true);  // Start the simulation
@@ -105,7 +116,6 @@ public class ApiController {
             return "Simulation is already running.";
         }
     }
-
 
     @PostMapping("api/stop")
     public String stopMips() {
@@ -123,6 +133,7 @@ public class ApiController {
             return "Simulation is not running.";
         }
     }
+
     @PostMapping("api/nextCycle")
     public String nextCycle() {
         if (simulationThread != null && simulationThread.isAlive()) {
@@ -146,6 +157,7 @@ public class ApiController {
             return "Some error occured when fetching updated Instructions";
         }
     }
+
     @GetMapping("api/arrayInstructions")
     public List<String> getInstructionsAsArray(){
         List<String> instructions;
@@ -158,6 +170,7 @@ public class ApiController {
             return null;
         }
     }
+
     @GetMapping("api/finalInstructions")
     public String getFinalInstructions(){
         try{
@@ -169,25 +182,34 @@ public class ApiController {
             return "Error fetching the final instructions";
         }
     }
+
     @GetMapping("api/aluData")
     public String getAluData() {
         return mips.getExecutionDetails();
     }
 
-
     @PostMapping("api/setClockType")
-    public String setClockType(@RequestBody ClockTypeRequest request){
+    public ResponseEntity<Map<String, String>> setClockType(@RequestBody ClockTypeRequest request) {
         this.selectedClockType = request.getClockType();
-        System.out.println("Clock type set to " + selectedClockType);
+        System.out.println("Clock type set to " + selectedClockType.name());
         mips.setClockType(selectedClockType);
-        return "Clock type set to " + selectedClockType;
+
+        // Create a map for the JSON response
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Clock type set to " + selectedClockType.name());
+
+        // Return the map as a JSON response
+        return ResponseEntity.ok(response);
     }
+
 
     @PostMapping ("api/updateInstructions")
     public String updatedInstructions(@RequestBody String instructions){
         String filePath="FinalInstructionList.txt";
+        String filePath2="src/main/resources/SimulationInstructions.txt";
         try{
             Files.write(Paths.get(filePath),instructions.getBytes());
+            Files.write(Paths.get(filePath2),instructions.getBytes());
             return "Instructions Saved Successfully!";
         }catch (IOException e){
             e.getMessage();

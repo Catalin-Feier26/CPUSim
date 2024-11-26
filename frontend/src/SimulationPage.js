@@ -8,23 +8,26 @@ const SimulationPage = () => {
     const [aluData, setAluData] = useState("");
     const [memoryData, setMemoryData] = useState([]);
     const [isRunning, setIsRunning] = useState(false);
+    const [activeInstructionIndexes, setActiveInstructionIndexes] = useState([]); // Updated state for active instruction indexes
 
     // Interval ID for polling
     const [pollingInterval, setPollingInterval] = useState(null);
 
     const fetchSimulationData = async () => {
         try {
-            const [instructionsResponse, registerResponse, aluResponse, memoryResponse] = await Promise.all([
+            const [instructionsResponse, registerResponse, aluResponse, memoryResponse, activeInstructionIndexesResponse] = await Promise.all([
                 fetch("/api/arrayInstructions").then(res => res.json()),
                 fetch("/api/registerFile").then(res => res.json()),
                 fetch("/api/aluData").then(res => res.text()),
                 fetch("/api/memoryData").then(res => res.json()),
+                fetch("/api/currentInstructionIndex").then(res => res.json()), // Fetch the active instructions list
             ]);
 
             setInstructions(Array.isArray(instructionsResponse) ? instructionsResponse : []);
             setRegisterFile(Object.entries(registerResponse).map(([key, value]) => `${key}: ${value} `));
             setAluData(aluResponse || "No ALU data available.");
             setMemoryData(Object.entries(memoryResponse));
+            setActiveInstructionIndexes(activeInstructionIndexesResponse); // Set the active instruction indexes
         } catch (error) {
             console.error("Error fetching simulation data:", error);
         }
@@ -32,7 +35,7 @@ const SimulationPage = () => {
 
     const startPolling = () => {
         if (!pollingInterval) {
-            const intervalId = setInterval(fetchSimulationData, 1000); // Fetch every second
+            const intervalId = setInterval(fetchSimulationData, 100); // Fetch every second
             setPollingInterval(intervalId);
         }
     };
@@ -72,7 +75,7 @@ const SimulationPage = () => {
         try {
             const response = await fetch('/api/nextCycle', { method: 'POST' });
             if (response.ok) {
-                await fetchSimulationData(); // Update data immediately after cycle
+                await fetchSimulationData();
                 console.log("Next cycle executed.");
             } else {
                 console.error("Failed to execute next cycle.");
@@ -93,7 +96,12 @@ const SimulationPage = () => {
                 <h2>Final Instructions</h2>
                 <ul>
                     {instructions.map((instruction, index) => (
-                        <li key={index}>{instruction}</li>
+                        <li
+                            key={index}
+                            className={activeInstructionIndexes.includes(index) ? "highlighted" : ""} // Check if the index is active
+                        >
+                            {instruction}
+                        </li>
                     ))}
                 </ul>
             </div>
@@ -124,7 +132,7 @@ const SimulationPage = () => {
                 </div>
             </div>
             <div className="mips-section">
-                <img src={MIPS} className="App-logo" alt="MIPS Diagram" />
+                <img src={MIPS} className="App-logo" alt="MIPS Diagram"/>
                 <div className="buttons">
                     <button className="btn" onClick={startSimulation} disabled={isRunning}>Start</button>
                     <button className="btn" onClick={nextClockCycle} disabled={!isRunning}>Next</button>

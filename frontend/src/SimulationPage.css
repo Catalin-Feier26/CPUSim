@@ -123,3 +123,14 @@ button:hover {
     font-style: italic;
     margin-top: 10px;
 }
+.highlighted {
+    background-color: #FFD700; /* gold color */
+    font-weight: bold;
+    animation: highlightAnimation 1s ease-in-out;
+}
+
+@keyframes highlightAnimation {
+    0% { background-color: #FFD700; }
+    100% { background-color: transparent; }
+}
+

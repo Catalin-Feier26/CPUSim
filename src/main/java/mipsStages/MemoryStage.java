@@ -17,7 +17,10 @@ public class MemoryStage {
     private MEMWBRegister memwbRegister;
     private DataMemory dataMemory;
     private ProgramCounter programCounter;
+
+
     public String instruction;
+    public int instructionIndex=-1;
 
     private boolean pcSrc;
 
@@ -47,7 +50,10 @@ public class MemoryStage {
         zero=exmemRegister.getZero();
         aluRes=exmemRegister.getAluResult();
         writeData=exmemRegister.getWriteData();
+
+
         instruction= exmemRegister.instruction;
+        instructionIndex=exmemRegister.instructionIndex;
     }
 
     public String execute() {
@@ -77,6 +83,8 @@ public class MemoryStage {
         memwbRegister.setHi(exmemRegister.getHi());
         memwbRegister.setLo(exmemRegister.getLo());
         memwbRegister.setReadData(readData);
+
+        memwbRegister.instructionIndex=instructionIndex;
         memwbRegister.instruction=instruction;
     }
 
@@ -97,6 +105,9 @@ public class MemoryStage {
         writeData = 0;
         readData = 0;
 
+    }
+    public String getInstruction(){
+        return instruction;
     }
     public HashMap<Integer,Integer> getDataMemory(){
         return dataMemory.getMemory();

@@ -9,6 +9,7 @@ import model.Register;
  */
 public class IDEXRegister {
     public String instruction="";
+    public int instructionIndex=-1;
 
     private boolean pcSrc;
     private boolean regDst;

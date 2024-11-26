@@ -11,6 +11,7 @@ public class InstructionFetch {
     private IFIDRegister ifidRegister;
 
     private String instruction;
+    public int instructionIndex=-1;
 
     // Made for Testing
     public static final String ANSI_RESET = "\u001B[0m";
@@ -18,13 +19,6 @@ public class InstructionFetch {
     public static final String ANSI_BLUE="\u001B[34m";
     public static final String ANSI_RED = "\u001B[31m";
 
-
-    public InstructionFetch(){
-        this.instructionMemory = new InstructionMemory("C:/Users/Zach/Desktop/ComputerS/year3/sem1/structure of computer systems/CPUSim/src/main/resources/instructions.txt");
-        this.pc = new ProgramCounter(instructionMemory.getInstructionCount());
-        this.ifidRegister = new IFIDRegister();
-        this.instruction = "";
-    }
 
     public InstructionFetch(ProgramCounter pc, InstructionMemory instructionMemory, IFIDRegister ifidRegister){
         this.pc = pc;
@@ -34,15 +28,22 @@ public class InstructionFetch {
     }
     public String fetchInstruction(){
         if(pc.getPC() >instructionMemory.getInstructionCount())
+        {
             this.instruction="";
+            instructionIndex=-1;
+        }
         else
+        {
             this.instruction=instructionMemory.getInstruction(pc.getPC());
+            instructionIndex=pc.getPC();
+        }
         pc.incrementPC();
         return instruction;
     }
     public void setUpIFIDRegister(){
         ifidRegister.setInstruction(instruction);
         ifidRegister.setPC(pc.getPC());
+        ifidRegister.instructionIndex=instructionIndex;
     }
     public String execute(){
         fetchInstruction();
@@ -60,6 +61,7 @@ public class InstructionFetch {
         instruction = "";
         pc.setPC(0);
         ifidRegister.reset();
+        instructionIndex=0;
     }
 
     public IFIDRegister getIfidRegister(){
