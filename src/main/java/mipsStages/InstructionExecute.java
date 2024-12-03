@@ -1,6 +1,7 @@
 package mipsStages;
 
 import lowComponents.AirthmeticLogicUnit;
+import model.AluOperation;
 import model.Register;
 import pipelineRegisters.IDEXRegister;
 import pipelineRegisters.EXMEMRegister;
@@ -14,8 +15,8 @@ public class InstructionExecute {
     private IDEXRegister idexRegister;
     private EXMEMRegister exmemRegister;
 
-    public String instruction="";
-    public int instructionIndex=-1;
+    public String instruction;
+    public int instructionIndex;
 
     private int ALURes;
     private boolean zero;
@@ -23,6 +24,7 @@ public class InstructionExecute {
     private Register writeRegister;
     private int hi;
     private int lo;
+    private AluOperation aluOperation;
     private int PC;
     private Register destinationRegister;
     private Register targetRegister;
@@ -43,6 +45,7 @@ public class InstructionExecute {
         hi=exmemRegister.getHi();
         lo=exmemRegister.getLo();
         PC=0;
+        aluOperation=AluOperation.UNSPECIFIED;
     }
     private void fetchFromIDEXRegister(){
         instructionIndex=idexRegister.instructionIndex;
@@ -53,8 +56,10 @@ public class InstructionExecute {
     }
     private void setOperands(){
         instruction= idexRegister.instruction;
+        instructionIndex= idexRegister.instructionIndex;;
         writeData= idexRegister.getReadData2();
         operand1=idexRegister.getReadData1();
+        aluOperation=idexRegister.getAluOp();
         operand2=idexRegister.getAluSrc() ? idexRegister.getImmediate() : idexRegister.getReadData2();
         if(idexRegister.getLoSrc()){
             operand2=idexRegister.getLo();
@@ -158,7 +163,7 @@ public class InstructionExecute {
                 lo = divResult[1];
                 break;
             case UNSPECIFIED:
-                return "";
+                return pretty();
             default:
                 throw new IllegalArgumentException("Unsupported ALU operation: " + idexRegister.getAluOp());
 
@@ -172,7 +177,7 @@ public class InstructionExecute {
     public String getExecutionDetails(){
         return "Operand1:\t" + operand1 + "\n" +
                 "Operand2:\t" + operand2 + "\n" +
-                "ALUOP:\t" + idexRegister.getAluOp().name()+ "\n"+
+                "ALUOP:\t" + aluOperation.name()+ "\n"+
                 "Result:\t" + ALURes + "\n";
     }
 

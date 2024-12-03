@@ -14,7 +14,7 @@ public class WriteBackStage{
     private RegisterFile registerFile;
 
     public String instruction="";
-    public int instructionIndex=-1;
+    public int instructionIndex;
 
     private boolean regWrite;
     private boolean memToReg;
@@ -39,6 +39,7 @@ public class WriteBackStage{
         lo=0;
         readData=0;
         writeData=0;
+        instructionIndex=-1;
     }
     public void reset() {
         instruction = "";
@@ -68,6 +69,7 @@ public class WriteBackStage{
         lo=memwbRegister.getLo();
         readData=memwbRegister.getReadData();
         instruction= memwbRegister.instruction;
+        instructionIndex=memwbRegister.instructionIndex;
     }
 
     public String execute() {

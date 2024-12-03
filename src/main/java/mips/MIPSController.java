@@ -154,14 +154,15 @@ public class MIPSController implements Runnable {
         List<Integer> activeIndexes= new ArrayList<>();
         if(instructionFetch.instructionIndex != -1)
             activeIndexes.add(instructionFetch.instructionIndex);
-        if(instructionDecode.instructionIndex != -1)
-            activeIndexes.add(instructionDecode.instructionIndex);
+        if(instructionDecode.instructionIndex -1!= -1)
+            activeIndexes.add(instructionDecode.instructionIndex-1);
         if(instructionExecute.instructionIndex != -1)
             activeIndexes.add(instructionExecute.instructionIndex);
         if(memoryStage.instructionIndex != -1)
             activeIndexes.add(memoryStage.instructionIndex);
         if(writeBackStage.instructionIndex != -1)
             activeIndexes.add(writeBackStage.instructionIndex);
+
         return activeIndexes;
     }
 

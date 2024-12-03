@@ -96,10 +96,7 @@ const SimulationPage = () => {
                 <h2>Final Instructions</h2>
                 <ul>
                     {instructions.map((instruction, index) => (
-                        <li
-                            key={index}
-                            className={activeInstructionIndexes.includes(index) ? "highlighted" : ""} // Check if the index is active
-                        >
+                        <li key={index} className={activeInstructionIndexes.includes(index) ? "highlighted" : ""}>
                             {instruction}
                         </li>
                     ))}

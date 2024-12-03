@@ -20,7 +20,7 @@ public class MemoryStage {
 
 
     public String instruction;
-    public int instructionIndex=-1;
+    public int instructionIndex;
 
     private boolean pcSrc;
 

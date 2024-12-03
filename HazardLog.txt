@@ -1,5 +1,5 @@
 RAW Hazard between: ADD R1 R2 R3 and ADD R10 R1 R3 because of the R1 register
-RAW Hazard between: SUBI R2 R3 10 and SUB R4 R10 R2 because of the R2 register
 RAW Hazard between: ADD R10 R1 R3 and SUB R4 R10 R2 because of the R10 register
 RAW Hazard between: SUB R4 R10 R2 and BEQ R3 R4 2 because of the R4 register
 RAW Hazard between: SUBI R3 R2 100 and BEQ R3 R4 2 because of the R3 register
+RAW Hazard between: SUB R10 R2 R15 and ADDI R5 R10 30 because of the R10 register

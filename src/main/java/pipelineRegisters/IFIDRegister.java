@@ -8,7 +8,7 @@ package pipelineRegisters;
 public class IFIDRegister {
     private int PC;
     private String instruction;
-    public int instructionIndex=-1;
+    public int instructionIndex;
 
     /**
      * Constructor for the IFIDRegister class.

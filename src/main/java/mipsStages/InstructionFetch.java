@@ -11,7 +11,7 @@ public class InstructionFetch {
     private IFIDRegister ifidRegister;
 
     private String instruction;
-    public int instructionIndex=-1;
+    public int instructionIndex;
 
     // Made for Testing
     public static final String ANSI_RESET = "\u001B[0m";
@@ -24,6 +24,7 @@ public class InstructionFetch {
         this.pc = pc;
         this.instructionMemory=instructionMemory;
         this.ifidRegister=ifidRegister;
+        this.instructionIndex=-1;
         this.instruction= "";
     }
     public String fetchInstruction(){
@@ -35,7 +36,7 @@ public class InstructionFetch {
         else
         {
             this.instruction=instructionMemory.getInstruction(pc.getPC());
-            instructionIndex=pc.getPC();
+            //instructionIndex=pc.getPC();
         }
         pc.incrementPC();
         return instruction;
@@ -46,6 +47,7 @@ public class InstructionFetch {
         ifidRegister.instructionIndex=instructionIndex;
     }
     public String execute(){
+        instructionIndex=pc.getPC();
         fetchInstruction();
         setUpIFIDRegister();
         return pretty();
@@ -61,7 +63,7 @@ public class InstructionFetch {
         instruction = "";
         pc.setPC(0);
         ifidRegister.reset();
-        instructionIndex=0;
+        instructionIndex=-1;
     }
 
     public IFIDRegister getIfidRegister(){
