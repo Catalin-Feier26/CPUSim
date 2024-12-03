@@ -11,7 +11,11 @@ import java.util.List;
 import java.util.Scanner;
 import model.clockType;
 import org.springframework.stereotype.Service;
-
+/**
+ * The {@code MIPSController} class orchestrates the execution of a simulated MIPS pipeline.
+ * It manages pipeline stages, handles clock cycles in manual and automatic modes, and
+ * resolves pipeline hazards.
+ */
 @Service
 public class MIPSController implements Runnable {
     private clockType clockType;
@@ -33,7 +37,10 @@ public class MIPSController implements Runnable {
     private WriteBackStage writeBackStage;
 
     private HazardDetection hazardDetection;
-
+    /**
+     * Constructs a new {@code MIPSController} and initializes all pipeline stages,
+     * registers, and components.
+     */
     public MIPSController() {
         clockType= model.clockType.AUTOMATIC;
         instructionMemory = new InstructionMemory();
@@ -53,6 +60,9 @@ public class MIPSController implements Runnable {
         instructionMemory.loadInstructions("src/main/resources/SimulationInstructions.txt");
          hazardDetection = new HazardDetection(new InstructionMemory("src/main/resources/NewInstructions.txt").getInstructions());
     }
+    /**
+     * Resets all pipeline registers, stages, and components to their initial states.
+     */
     public void resetMips(){
         registerFile.reset();
         pc.reset();
@@ -67,6 +77,10 @@ public class MIPSController implements Runnable {
         memoryStage.reset();
         writeBackStage.reset();
     }
+    /**
+     * Detects and resolves pipeline hazards by introducing NOP instructions and updating
+     * the instruction memory accordingly.
+     */
     public void solveHazards(){
         System.out.println("Calling from the new method :U");
         hazardDetection.writeDetectedHazardsToFile("HazardLog.txt");
@@ -75,9 +89,18 @@ public class MIPSController implements Runnable {
         instructionMemory.setInstructions(hazardDetection.getUpdatedInstructionList());
         instructionMemory.loadInstructions("FinalInstructionList.txt");
     }
+    /**
+     * Retrieves the current state of the register file as a map of registers and their values.
+     *
+     * @return A {@code HashMap} containing registers as keys and their values as integers.
+     */
     public HashMap<Register,Integer> getRegisterFileData(){
         return this.registerFile.getRegisters();
     }
+    /**
+     * Executes a single clock cycle by invoking each stage of the MIPS pipeline.
+     * Outputs the details of the cycle's execution to the console.
+     */
     public void executeClockCycle(){
         System.out.println("\n===== Clock Cycle Start =====");
         StringBuilder cycleOutput = new StringBuilder();
@@ -90,6 +113,10 @@ public class MIPSController implements Runnable {
         System.out.println(cycleOutput);
         System.out.println("===== Clock Cycle End =====\n");
     }
+    /**
+     * Executes the pipeline in manual mode, requiring user interaction to proceed to the next cycle.
+     * The thread waits for notifications to advance.
+     */
     public synchronized void runManualMips() {
         while (isRunning) {
             try {
@@ -105,11 +132,16 @@ public class MIPSController implements Runnable {
             }
         }
     }
-
+    /**
+     * Notifies the thread to proceed to the next clock cycle in manual mode.
+     */
     public synchronized void nextIsPressed() {
         notifyAll();
     }
-
+    /**
+     * Executes the pipeline in automatic mode, advancing through clock cycles
+     * at fixed intervals until interrupted.
+     */
     public void runAutomaticMips() {
         while (isRunning) {
             try {
@@ -125,7 +157,10 @@ public class MIPSController implements Runnable {
             }
         }
     }
-
+    /**
+     * The main entry point for the {@code MIPSController} thread.
+     * Determines whether to run the pipeline in manual or automatic mode.
+     */
     public void run(){
         instructionMemory.loadInstructions("src/main/resources/SimulationInstructions.txt");
         if(clockType== model.clockType.MANUAL){
@@ -133,23 +168,51 @@ public class MIPSController implements Runnable {
         }else
             runAutomaticMips();
     }
+    /**
+     * Retrieves execution details from the {@code InstructionExecute} stage.
+     *
+     * @return A {@code String} containing execution details of the current instruction.
+     */
     public String getExecutionDetails(){
         return instructionExecute.getExecutionDetails();
     }
-
+    /**
+     * Sets the clock type to either manual or automatic mode.
+     *
+     * @param clockType The desired {@code clockType}.
+     */
     public void setClockType(model.clockType clockType) {
         this.clockType = clockType;
     }
-
+    /**
+     * Retrieves the current state of the data memory.
+     *
+     * @return A {@code HashMap} containing memory addresses as keys and their values as integers.
+     */
     public HashMap<Integer,Integer> getMemory(){
         return this.memoryStage.getDataMemory();
     }
+    /**
+     * Sets the running state of the pipeline.
+     *
+     * @param isRunning {@code true} to start the pipeline, {@code false} to stop it.
+     */
     public void setIsRunning(boolean isRunning){
         this.isRunning=isRunning;
     }
+    /**
+     * Updates the instruction memory with instructions from a new file.
+     *
+     * @param fileName The name of the file containing the new instructions.
+     */
     public void updateInstructionMemort(String fileName){
         instructionMemory=new InstructionMemory(fileName);
     }
+    /**
+     * Retrieves the indexes of instructions currently active in each pipeline stage.
+     *
+     * @return A {@code List<Integer>} containing the active instruction indexes.
+     */
     public List<Integer> activeInstructionsIndexes(){
         List<Integer> activeIndexes= new ArrayList<>();
         if(instructionFetch.instructionIndex != -1)

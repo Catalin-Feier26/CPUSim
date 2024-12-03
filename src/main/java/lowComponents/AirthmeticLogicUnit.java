@@ -117,7 +117,6 @@ public class AirthmeticLogicUnit {
     public static int slt(int a, int b) {
         return a < b ? 1 : 0;
     }
-
     /**
      *  The shift left operation
      * @param a The number to be shifted

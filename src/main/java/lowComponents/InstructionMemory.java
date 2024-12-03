@@ -36,7 +36,6 @@ public class InstructionMemory {
         }
         return instructions;
     }
-
     /**
      * Constructor for the InstructionMemory class.
      * Initializes the instructions to an empty array.
@@ -76,7 +75,6 @@ public class InstructionMemory {
     public int getInstructionCount() {
         return instructions.size();
     }
-
     /**
      * Gets the instructions of the program.
      * @return List<String> The instructions of the program.
@@ -92,7 +90,6 @@ public class InstructionMemory {
     public boolean addInstruction(String instruction) {
         return instructions.add(instruction);
     }
-
     /**
      * Overrides the toString method to return the string representation of the Instruction Memory.
      * @return String The string representation of the Instruction Memory.

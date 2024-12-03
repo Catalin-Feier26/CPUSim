@@ -105,9 +105,9 @@ public class ApiController {
         mips.resetMips();
         mips.updateInstructionMemort("FinalInstructionList.txt");
         if (simulationThread == null || !simulationThread.isAlive()) {
-            mips.setClockType(selectedClockType);  // Set clock type (manual/automatic)
-            mips.setIsRunning(true);  // Start the simulation
-            simulationThread = new Thread(mips);  // Start a new thread for simulation
+            mips.setClockType(selectedClockType);
+            mips.setIsRunning(true);
+            simulationThread = new Thread(mips);
             simulationThread.start();
             System.out.println("Simulation started running");
             return "Simulation started in ";
@@ -120,9 +120,8 @@ public class ApiController {
     @PostMapping("api/stop")
     public String stopMips() {
         if (simulationThread != null && simulationThread.isAlive()) {
-            mips.setIsRunning(false);  // Stop the simulation
-            simulationThread.interrupt();  // Interrupt the thread if necessary
-            // No need to call join() here, just let the thread finish on its own
+            mips.setIsRunning(false);
+            simulationThread.interrupt();
             System.out.println("Simulation Stopped");
             return "Simulation stopped.";
         } else {
@@ -191,12 +190,8 @@ public class ApiController {
         this.selectedClockType = request.getClockType();
         System.out.println("Clock type set to " + selectedClockType.name());
         mips.setClockType(selectedClockType);
-
-        // Create a map for the JSON response
         Map<String, String> response = new HashMap<>();
         response.put("message", "Clock type set to " + selectedClockType.name());
-
-        // Return the map as a JSON response
         return ResponseEntity.ok(response);
     }
 

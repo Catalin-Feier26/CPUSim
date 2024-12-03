@@ -1,3 +1,4 @@
+
 package mipsStages;
 
 import lowComponents.*;
@@ -7,7 +8,11 @@ import pipelineRegisters.IDEXRegister;
 import pipelineRegisters.IFIDRegister;
 import model.*;
 
-
+/**
+ * Represents the Instruction Decode stage in a MIPS pipeline simulation.
+ * Responsible for parsing and decoding the current instruction, reading register values,
+ * and passing decoded information and control signals to the next pipeline stage (ID/EX).
+ */
 public class InstructionDecode {
     private IFIDRegister ifidRegister;
     private IDEXRegister idexRegister;
@@ -34,7 +39,14 @@ public class InstructionDecode {
     private int address;
 
     private int pc;
-
+    /**
+     * Constructs an InstructionDecode instance with the given pipeline registers, register file, and control unit.
+     *
+     * @param ifidRegister  The IF/ID pipeline register.
+     * @param idexRegister  The ID/EX pipeline register.
+     * @param registerFile  The register file used by the CPU.
+     * @param controlUnit   The control unit generating control signals.
+     */
     public InstructionDecode(IFIDRegister ifidRegister, IDEXRegister idexRegister, RegisterFile registerFile, ControlUnit controlUnit) {
         this.ifidRegister=ifidRegister;
         this.idexRegister=idexRegister;
@@ -56,6 +68,9 @@ public class InstructionDecode {
         address=0;
         pc=0;
     }
+    /**
+     * Resets the stage, clearing the current instruction and resetting all fields to default values.
+     */
     public void reset(){
         instruction="";
         this.pc=0;
@@ -63,6 +78,9 @@ public class InstructionDecode {
         readData1=0;
         readData2=0;
     }
+    /**
+     * Sets all instruction-related fields to their default values.
+     */
     private void setValuesToDefault(){
         instructionIndex=pc;
         readData1=0;
@@ -76,20 +94,35 @@ public class InstructionDecode {
         immediate=0;
         address=0;
     }
+    /**
+     * Sets the current instruction from the IF/ID pipeline register.
+     */
     private void setInstruction(){
         this.instruction=this.ifidRegister.getInstruction();
         instructionIndex=pc-1;
     }
+    /**
+     * Sets the program counter (PC) from the IF/ID pipeline register.
+     */
     private void setPc(){
         this.pc = this.ifidRegister.getPC();
     }
+    /**
+     * Decodes the control signals for the current instruction.
+     */
     private void decodeControlSignals(){
         controlUnit.generateControlSignals(this.instruction);
     }
+    /**
+     * Reads data from the register file for the source registers specified in the instruction.
+     */
     private void readFromRegisterFile(){
         readData1 = registerFile.getRegister(rs);
         readData2 = registerFile.getRegister(rt);
     }
+    /**
+     * Passes control signals and other decoded values to the ID/EX pipeline register.
+     */
     private void passControlSignals(){
         idexRegister.setPcSrc(controlUnit.getPcSrc());
         idexRegister.setRegDst(controlUnit.getRegDst());
@@ -121,9 +154,20 @@ public class InstructionDecode {
         idexRegister.instructionIndex=instructionIndex-1;
 
     }
+    /**
+     * Retrieves the current instruction being processed.
+     *
+     * @return the current instruction as a string
+     */
     public String getInstruction(){
         return instruction;
     }
+    /**
+     * Executes the Instruction Decode stage by processing the current instruction,
+     * decoding its components, and passing data and control signals to the next stage.
+     *
+     * @return a formatted string summarizing the decode stage's output
+     */
     public String execute(){
         setInstruction();
         if(instruction.equals("")) {
@@ -138,7 +182,10 @@ public class InstructionDecode {
         return pretty();
         //prettyPrint();
     }
-
+    /**
+     * Decodes the current instruction by determining its type (R-type, I-type, J-type)
+     * and parsing its components accordingly.
+     */
     public void decodeInstruction() {
         String[] parts = instruction.toUpperCase().split(" ");
         setValuesToDefault();
@@ -159,6 +206,11 @@ public class InstructionDecode {
             }
         }
     }
+    /**
+     * Decodes an R-type instruction and extracts its components.
+     *
+     * @param parts the parts of the R-type instruction as a string array
+     */
     private void decodeRType(String[] parts) {
         switch (parts[0]) {
             case "NOP":
@@ -232,6 +284,11 @@ public class InstructionDecode {
 
         }
     }
+    /**
+     * Decodes an I-type instruction and extracts its components.
+     *
+     * @param parts the parts of the I-type instruction as a string array
+     */
     private void decodeIType(String[] parts) {
         switch (parts[0]) {
             case "ADDI":
@@ -279,6 +336,11 @@ public class InstructionDecode {
                 throw new IllegalArgumentException("Invalid I-type instruction: " + parts[0]);
         }
     }
+    /**
+     * Decodes a J-type instruction and extracts its components.
+     *
+     * @param parts the parts of the J-type instruction as a string array
+     */
     private void decodeJType(String[] parts) {
         switch (parts[0]) {
             case "J":
@@ -290,6 +352,9 @@ public class InstructionDecode {
                 break;
         }
     }
+    /**
+     * Prints the decoded instruction details to the console in a human-readable format.
+     */
     public void prettyPrint() {
         System.out.println("INSTRUCTION DECODE");
 
@@ -308,6 +373,11 @@ public class InstructionDecode {
         System.out.println("---------------------------------------------------");
 
     }
+    /**
+     * Formats the decoded instruction details as a colored string for display.
+     *
+     * @return a formatted string summarizing the decode stage's output with color
+     */
     public String pretty() {
         return ANSI_RED + "INSTRUCTION DECODE\n" + ANSI_RESET +
                 ANSI_YELLOW + "Instruction: " + ANSI_RESET + ANSI_BLUE + instruction + ANSI_RESET + "\n" +
@@ -322,36 +392,67 @@ public class InstructionDecode {
                 ANSI_YELLOW + "Read Data 2: " + ANSI_RESET + ANSI_BLUE + readData2 + ANSI_RESET + "\n" +
                 "---------------------------------------------------\n";
     }
-
-
+    /**
+     * Retrieves the current IF/ID pipeline register.
+     *
+     * @return the IF/ID register
+     */
     public IFIDRegister getIfidRegister() {
         return ifidRegister;
     }
-
+    /**
+     * Sets the IF/ID pipeline register.
+     *
+     * @param ifidRegister the IF/ID register to set
+     */
     public void setIfidRegister(IFIDRegister ifidRegister) {
         this.ifidRegister = ifidRegister;
     }
-
+    /**
+     * Retrieves the current ID/EX pipeline register.
+     *
+     * @return the ID/EX register
+     */
     public IDEXRegister getIdexRegister() {
         return idexRegister;
     }
-
+    /**
+     * Sets the ID/EX pipeline register.
+     *
+     * @param idexRegister the ID/EX register to set
+     */
     public void setIdexRegister(IDEXRegister idexRegister) {
         this.idexRegister = idexRegister;
     }
-
+    /**
+     * Retrieves the current register file.
+     *
+     * @return the register file
+     */
     public RegisterFile getRegisterFile() {
         return registerFile;
     }
-
+    /**
+     * Sets the register file.
+     *
+     * @param registerFile the register file to set
+     */
     public void setRegisterFile(RegisterFile registerFile) {
         this.registerFile = registerFile;
     }
-
+    /**
+     * Retrieves the current control unit.
+     *
+     * @return the control unit
+     */
     public ControlUnit getControlUnit() {
         return controlUnit;
     }
-
+    /**
+     * Sets the control unit.
+     *
+     * @param controlUnit the control unit to set
+     */
     public void setControlUnit(ControlUnit controlUnit) {
         this.controlUnit = controlUnit;
     }

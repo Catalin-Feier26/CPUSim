@@ -4,6 +4,10 @@ import lowComponents.RegisterFile;
 import pipelineRegisters.MEMWBRegister;
 import model.Register;
 
+/**
+ * The WriteBackStage class represents the Write-Back (WB) stage of the MIPS pipeline.
+ * This stage writes results back to the register file or special registers (HI and LO) based on control signals.
+ */
 public class WriteBackStage{
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_YELLOW = "\u001B[33m";
@@ -25,7 +29,12 @@ public class WriteBackStage{
     private int hi, lo;
     private int readData;
     private int writeData;
-
+    /**
+     * Constructs a WriteBackStage object using the specified MEM/WB pipeline register and RegisterFile.
+     *
+     * @param memwbRegister the MEMWBRegister object containing data from the previous stage
+     * @param registerFile  the RegisterFile object where data is written back
+     */
     public WriteBackStage(MEMWBRegister memwbRegister, RegisterFile registerFile) {
         this.memwbRegister = memwbRegister;
         this.registerFile = registerFile;
@@ -41,6 +50,9 @@ public class WriteBackStage{
         writeData=0;
         instructionIndex=-1;
     }
+    /**
+     * Resets the state of the WriteBackStage, clearing all control signals, register values, and instruction data.
+     */
     public void reset() {
         instruction = "";
         regWrite = false;
@@ -58,6 +70,10 @@ public class WriteBackStage{
 
         instructionIndex=-1;
     }
+    /**
+     * Fetches control signals and data from the MEM/WB pipeline register.
+     * This method prepares the stage for execution by loading necessary data.
+     */
     private void fetchFromRegister(){
         this.regWrite=memwbRegister.getRegWrite();
         this.memToReg=memwbRegister.getMemToReg();
@@ -71,7 +87,13 @@ public class WriteBackStage{
         instruction= memwbRegister.instruction;
         instructionIndex=memwbRegister.instructionIndex;
     }
-
+    /**
+     * Executes the Write-Back stage, performing the following:
+     * - Writes data to the specified register in the register file if RegWrite is active.
+     * - Writes to the HI or LO registers if HiWrite or LoWrite signals are active.
+     *
+     * @return a formatted string summarizing the Write-Back stage's outputs
+     */
     public String execute() {
         fetchFromRegister();
         int writeData = memToReg ? readData : aluResult;
@@ -87,9 +109,18 @@ public class WriteBackStage{
         //prettyPrint();
         return pretty();
     }
+    /**
+     * Retrieves the instruction currently processed in the Write-Back stage.
+     *
+     * @return the current instruction as a string
+     */
     public String getInstruction(){
         return  instruction;
     }
+    /**
+     * Prints a detailed summary of the Write-Back stage's data and control signals to the console.
+     * This method is useful for debugging purposes.
+     */
     public void prettyPrint() {
         System.out.println("WRITEBACK STAGE");
         System.out.println("Memory Stage:");
@@ -105,6 +136,13 @@ public class WriteBackStage{
         System.out.println("---------------------------------------------------");
 
     }
+    /**
+     * Provides a formatted representation of the Write-Back stage's data and control signals.
+     * Includes information about the instruction, ALU result, memory data, and control signals.
+     * Uses ANSI color formatting for better console readability.
+     *
+     * @return a formatted string summarizing the Write-Back stage's outputs
+     */
     public String pretty() {
         return ANSI_RED + "WRITEBACK STAGE\n" + ANSI_RESET +
                 ANSI_YELLOW + "Instruction: " + ANSI_RESET + ANSI_BLUE + instruction + ANSI_RESET + "\n" +

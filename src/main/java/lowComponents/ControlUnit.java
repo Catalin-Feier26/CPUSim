@@ -36,8 +36,13 @@ public class ControlUnit {
     public ControlUnit() {
         reset();
     }
+
+    /**
+     * Method to generate and set all Control Signals based on the instruction.
+     * @param instruction - The instruction based on which the control signals are set.
+     */
     public void generateControlSignals(String instruction){
-        String parts[] = instruction.toUpperCase().split(" ");
+        String[] parts = instruction.toUpperCase().split(" ");
         switch (parts[0]) {
             case "NOP":
                 regWrite = false;
@@ -676,9 +681,6 @@ public class ControlUnit {
         hiWrite = false;
         loWrite = false;
     }
-
-    public void setControlSignals(){
-    }
     /**
      * Gets the value of the PcSrc control signal.
      * @return boolean The value of the PcSrc control signal.
@@ -812,7 +814,6 @@ public class ControlUnit {
     public boolean getJump() {
         return jump;
     }
-
     /**
      * Sets the value of the Jump control signal.
      * @param jump '1' if we have a jump instruction, 0 if not
@@ -841,7 +842,6 @@ public class ControlUnit {
     public boolean getLoWrite() {
         return loWrite;
     }
-
     /**
      *  Sets the value of the LoWrite control signal.
      * @param loWrite should be 1 if we modify the Lo register and 0 if not.
@@ -849,21 +849,34 @@ public class ControlUnit {
     public void setLoWrite(boolean loWrite) {
         this.loWrite = loWrite;
     }
-
+    /**
+     * Setter for the hiSrc signal.
+     * @param hiSrc
+     */
     public void setHiSrc(boolean hiSrc) {
         this.hiSrc = hiSrc;
     }
-
+    /**
+     * Setter for the loSrc
+     * @param loSrc  The value to set the LoSrc control signal
+     */
     public void setLoSrc(boolean loSrc) {
         this.loSrc = loSrc;
     }
+    /**
+     * Getter for the HiSrc control signals
+     * @return boolean
+     */
     public boolean getHiSrc(){
         return  hiSrc;
     }
+    /**
+     * Getter for the LoSrc control signal.
+     * @return boolean
+     */
     public boolean getLoSrc(){
         return loSrc;
     }
-
     /**
      * Gets the value of the extension control signal.
      * @return ext The value of the extension control signal.
@@ -878,6 +891,10 @@ public class ControlUnit {
     public void setExtension(ext extension) {
         this.extension = extension;
     }
+    /**
+     * Override for the general toString method
+     * @return String - The formatted string of the class.
+     */
     @Override
     public String toString(){
         return "ControlUnit{" +

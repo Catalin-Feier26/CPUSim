@@ -22,7 +22,6 @@ public class ProgramCounter {
     public void reset(){
         this.PC=0;
     }
-
     /**
      * Gets the value of the Program Counter.
      * @return int The value of the Program Counter.

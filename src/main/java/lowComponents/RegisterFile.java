@@ -22,7 +22,6 @@ public class RegisterFile {
     public RegisterFile() {
         reset();
     }
-
     /**
      * Resets the content of the RegisterFile to 0.
      * This method is called by the constructor.
@@ -76,6 +75,10 @@ public class RegisterFile {
     public void setLo(int value) {
         Lo = value;
     }
+    /**
+     * Getter for the Map inside the register file
+     * @return HashMap<Register, Integer>
+     */
     public HashMap<Register, Integer> getRegisters(){
         return registers;
     }

@@ -5,7 +5,11 @@ import model.AluOperation;
 import model.Register;
 import pipelineRegisters.IDEXRegister;
 import pipelineRegisters.EXMEMRegister;
-
+/**
+ * The InstructionExecute class represents the Execute stage of the MIPS pipeline.
+ * It processes instructions by performing arithmetic or logic operations, calculating branch targets,
+ * and passing data to the next pipeline stage.
+ */
 public class InstructionExecute {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_YELLOW = "\u001B[33m";
@@ -33,6 +37,12 @@ public class InstructionExecute {
     private int operand1;
     private int operand2;
 
+    /**
+     * Constructs an InstructionExecute object, initializing its state and linking pipeline registers.
+     *
+     * @param idexRegister the IDEX pipeline register
+     * @param exmemRegister the EXMEM pipeline register
+     */
     public InstructionExecute(IDEXRegister idexRegister, EXMEMRegister exmemRegister){
         this.idexRegister=idexRegister;
         this.exmemRegister=exmemRegister;
@@ -47,6 +57,9 @@ public class InstructionExecute {
         PC=0;
         aluOperation=AluOperation.UNSPECIFIED;
     }
+    /**
+     * Fetches instruction details and control signals from the IDEX pipeline register.
+     */
     private void fetchFromIDEXRegister(){
         instructionIndex=idexRegister.instructionIndex;
         this.PC=idexRegister.getPC();
@@ -54,6 +67,9 @@ public class InstructionExecute {
         this.destinationRegister=idexRegister.getRd();
         this.targetAddress=idexRegister.getJumpAddress();
     }
+    /**
+     * Sets the operands and control values required for ALU operations, based on the current instruction.
+     */
     private void setOperands(){
         instruction= idexRegister.instruction;
         instructionIndex= idexRegister.instructionIndex;;
@@ -69,6 +85,9 @@ public class InstructionExecute {
         }
         writeRegister= idexRegister.getRegDst() ? idexRegister.getRd() : idexRegister.getRt();
     }
+    /**
+     * Passes the calculated results and control signals to the EXMEM pipeline register.
+     */
     private void passControls(){
         exmemRegister.setJump(idexRegister.getJump());
         exmemRegister.setHiWrite(idexRegister.getHiWrite());
@@ -90,6 +109,9 @@ public class InstructionExecute {
         exmemRegister.instruction=instruction;
         exmemRegister.instructionIndex=instructionIndex;
     }
+    /**
+     * Resets the state of the Execute stage and clears all intermediate values.
+     */
     public void reset() {
         instruction = "";
         PC = 0;
@@ -109,9 +131,20 @@ public class InstructionExecute {
         operand2 = 0;
         exmemRegister.reset(); // Assuming that EXMEMRegister has a reset method
     }
+    /**
+     * Retrieves the current instruction being processed in the Execute stage.
+     *
+     * @return the current instruction as a string
+     */
     public String getInstruction(){
         return instruction;
     }
+    /**
+     * Executes the ALU operations and other computations for the current instruction,
+     * and passes the results to the next pipeline stage.
+     *
+     * @return a formatted string summarizing the execution stage's output
+     */
     public String execute() {
         int aluResult = 0;
 
@@ -174,13 +207,23 @@ public class InstructionExecute {
         passControls();
         return pretty();
     }
+    /**
+     * Retrieves detailed execution information such as operands, ALU operation, and result.
+     *
+     * @return a string containing the execution details
+     */
     public String getExecutionDetails(){
         return "Operand1:\t" + operand1 + "\n" +
                 "Operand2:\t" + operand2 + "\n" +
                 "ALUOP:\t" + aluOperation.name()+ "\n"+
                 "Result:\t" + ALURes + "\n";
     }
-
+    /**
+     * Returns a formatted string representing the state and outputs of the Execute stage,
+     * with colored formatting for console display.
+     *
+     * @return a string summarizing the execution stage's outputs
+     */
     public String pretty() {
         return ANSI_RED + "INSTRUCTION EXECUTE\n" + ANSI_RESET +
                 ANSI_YELLOW + "Instruction: " + ANSI_RESET + ANSI_BLUE + instruction + ANSI_RESET + "\n" +
@@ -194,8 +237,11 @@ public class InstructionExecute {
                 ANSI_YELLOW + "LO: " + ANSI_RESET + ANSI_BLUE + lo + ANSI_RESET + "\n" +
                 "---------------------------------------------------\n";
     }
-
-
+    /**
+     * Retrieves the EXMEM pipeline register.
+     *
+     * @return the EXMEM pipeline register
+     */
     public EXMEMRegister getExmemRegister() {
         return exmemRegister;
     }

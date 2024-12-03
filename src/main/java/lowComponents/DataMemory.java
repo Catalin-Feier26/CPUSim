@@ -42,6 +42,11 @@ public class DataMemory {
             throw new IllegalArgumentException("Memory address does not exist");
         return memory.get(address);
     }
+
+    /**
+     * Getter for the memory.
+     * @return HashMap<Integer,Integer> - The memory is represented as a map.
+     */
     public HashMap<Integer,Integer> getMemory(){
         return memory;
     }

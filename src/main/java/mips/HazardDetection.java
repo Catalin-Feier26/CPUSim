@@ -8,20 +8,40 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.ArrayList;
 import model.*;
-
+/**
+ * The HazardDetection class is responsible for identifying and resolving hazards in a list of MIPS instructions.
+ * It provides functionality to detect RAW hazards, insert NOP instructions to resolve hazards, and write the updated
+ * instruction list to a file.
+ */
 public class HazardDetection {
 
     private List<String> instructionList;
     private List<String> updatedInstructionList;
     private boolean nopsAdded=false;
+    /**
+     * Constructs a HazardDetection instance with the provided list of instructions.
+     *
+     * @param instructionList the list of instructions to analyze and resolve hazards for.
+     */
     public HazardDetection(List<String> instructionList) {
         this.instructionList = instructionList;
         this.updatedInstructionList = new ArrayList<>();
     }
+    /**
+     * Constructs a HazardDetection instance by loading instructions from a file.
+     *
+     * @param fileName the name of the file containing the instructions.
+     */
     public HazardDetection(String fileName){
         this.instructionList=loadInstructions(fileName);
         this.updatedInstructionList=new ArrayList<>();
     }
+    /**
+     * Loads instructions from a file.
+     *
+     * @param fileName the name of the file to load instructions from.
+     * @return the list of instructions read from the file.
+     */
     public List<String> loadInstructions(String fileName) {
         try {
             instructionList = Files.readAllLines(Paths.get(fileName));
@@ -31,6 +51,11 @@ public class HazardDetection {
         }
         return instructionList;
     }
+    /**
+     * Writes detected hazards to a file.
+     *
+     * @param filename the name of the file where detected hazards will be written.
+     */
     public void writeDetectedHazardsToFile(String filename) {
         System.out.println("Starting to write hazards into this file: " + filename);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
@@ -60,6 +85,10 @@ public class HazardDetection {
             System.err.println("Error writing detected hazards to file: " + e.getMessage());
         }
     }
+    /**
+     * Detects and resolves hazards by inserting NOP instructions where necessary.
+     * Updates the instruction list to include resolved instructions.
+     */
     public void detectAndSolveHazards() {
         List<String> currentInstructionList = new ArrayList<>(instructionList);
         int iteration = 0; // To track the number of iterations
@@ -100,7 +129,11 @@ public class HazardDetection {
             currentInstructionList = new ArrayList<>(updatedInstructionList); // Update currentInstructionList for the next iteration
         } while (nopsAdded);
     }
-
+    /**
+     * Writes the updated instruction list after hazard resolution to a file.
+     *
+     * @param filename the name of the file where updated instructions will be written.
+     */
     public void writeUpdatedInstructionsToFile(String filename) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             for (String instruction : updatedInstructionList) {
@@ -112,12 +145,14 @@ public class HazardDetection {
             System.err.println("Error writing updated instructions to file: " + e.getMessage());
         }
     }
-    private List<String> addRestInstructions(int i){
-        for(; i<instructionList.size(); i++){
-            updatedInstructionList.add(instructionList.get(i));
-        }
-        return new ArrayList<>(updatedInstructionList);
-    }
+    /**
+     * Determines if the destination register of an instruction matches any source registers
+     * of a subsequent instruction.
+     *
+     * @param parts the components of the subsequent instruction.
+     * @param match the destination register of the current instruction.
+     * @return true if a match is found, false otherwise.
+     */
     private boolean destinationMatchesSources(String[] parts, String match){
         switch (parts[0]){
             // -
@@ -149,6 +184,12 @@ public class HazardDetection {
         }
         return false;
     }
+    /**
+     * Extracts the destination register from a given instruction.
+     *
+     * @param instruction the instruction to decode.
+     * @return the destination register or "R0" if none exists.
+     */
     private String getDestination(String instruction){
         String [] parts = instruction.toUpperCase().split(" ");
         try{
@@ -169,6 +210,12 @@ public class HazardDetection {
         }
         return "R0";
     }
+    /**
+     * Decodes the destination register for R-type instructions.
+     *
+     * @param parts the components of the instruction.
+     * @return the destination register or "R0" if none exists.
+     */
     private String decodeRType(String[] parts){
         switch (parts[0]){
             case "NOP", "MULT", "DIV", "MTHI", "MTLO", "JR": return "R0";
@@ -178,18 +225,36 @@ public class HazardDetection {
         }
         return "R0";
     }
+    /**
+     * Decodes the destination register for J-type instructions.
+     *
+     * @param parts the components of the instruction.
+     * @return the destination register or "R0" if none exists.
+     */
     private String decodeJType(String[] parts){
         switch (parts[0]){
             case "JR": return "R31";
         }
         return "R0";
     }
+    /**
+     * Decodes the destination register for I-type instructions.
+     *
+     * @param parts the components of the instruction.
+     * @return the destination register or "R0" if none exists.
+     */
     private String decodeIType(String[] parts){
         switch (parts[0]){
             case "ADDI", "SUBI", "ANDI", "ORI", "XORI", "LW", "SLTI": return parts[1];
         }
         return "R0";
     }
+    /**
+     * Determines if a register is writable.
+     *
+     * @param tag the register to check.
+     * @return true if the register is writable, false otherwise.
+     */
     private boolean writeInRegister(String tag) {
         if (tag == null) {
             return false;
@@ -212,7 +277,11 @@ public class HazardDetection {
                 return true;
         }
     }
-
+    /**
+     * Retrieves the updated list of instructions after hazard resolution.
+     *
+     * @return the updated instruction list.
+     */
     public List<String> getUpdatedInstructionList() {
         return updatedInstructionList;
     }
