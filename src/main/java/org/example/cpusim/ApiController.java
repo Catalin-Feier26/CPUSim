@@ -142,7 +142,16 @@ public class ApiController {
             return "Simulation is not running or not in manual mode.";
         }
     }
-
+    @GetMapping("api/getClockType")
+    public Map<String, String> getClockType(){
+        Map<String,String> response = new HashMap<>();
+        if(selectedClockType==clockType.AUTOMATIC){
+            response.put("clockType","AUTOMATED");
+        }else if(selectedClockType==clockType.MANUAL){
+            response.put("clockType","MANUAL");
+        }
+        return response;
+    }
     @GetMapping("api/updatedInstructions")
     public String getUpdatedInstructions(){
         try{
