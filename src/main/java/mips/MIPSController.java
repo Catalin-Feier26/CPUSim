@@ -4,7 +4,7 @@ import lowComponents.*;
 import model.Register;
 import pipelineRegisters.*;
 import mipsStages.*;
-
+import interfaceHighlight.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -112,6 +112,11 @@ public class MIPSController implements Runnable {
         cycleOutput.append(instructionFetch.execute());
         System.out.println(cycleOutput);
         System.out.println("===== Clock Cycle End =====\n");
+        instructionInInstructionFetch();
+        instructionInInstructionDecode();
+        instructionInInstructionExecute();
+        instructionInMemoryStage();
+        instructionInWriteBackStage();
     }
     /**
      * Executes the pipeline in manual mode, requiring user interaction to proceed to the next cycle.
@@ -225,8 +230,95 @@ public class MIPSController implements Runnable {
             activeIndexes.add(memoryStage.instructionIndex);
         if(writeBackStage.instructionIndex != -1)
             activeIndexes.add(writeBackStage.instructionIndex);
-
         return activeIndexes;
+    }
+
+    /**
+     * Retrieves the current instruction in the instruction fetch stage.
+     * @return A {@code String} The current instruction in the instruction fetch stage.
+     */
+    public String instructionInInstructionFetch(){
+        if(instructionFetch.getInstruction()==null)
+            return "";
+        String local=instructionFetch.getInstruction();
+        local=local.toUpperCase();
+        System.out.println(local);
+        return local.split(" ")[0];
+    }
+    /**
+     * Retrieves the current instruction in the instruction decode stage.
+     * @return A {@code String} The current instruction in the instruction decode stage.
+     */
+    public String instructionInInstructionDecode(){
+        if(instructionDecode.getInstruction()==null)
+            return "";
+        String local=instructionDecode.getInstruction();
+        local=local.toUpperCase();
+        System.out.println(local);
+        return local.split(" ")[0];
+    }
+    /**
+     * Retrieves the current instruction in the instruction execute stage.
+     * @return A {@code String} The current instruction in the instruction execute stage.
+     */
+    public String instructionInInstructionExecute(){
+        if(instructionExecute.getInstruction()==null)
+            return "";
+        String local=instructionExecute.getInstruction();
+        local=local.toUpperCase();
+        System.out.println(local);
+        return local.split(" ")[0];
+    }
+    /**
+     * Retrieves the current instruction in the memory stage.
+     * @return A {@code String} The current instruction in the memory stage.
+     */
+    public String instructionInMemoryStage(){
+        if(memoryStage.getInstruction()==null)
+            return "";
+        String local=memoryStage.getInstruction();
+        local=local.toUpperCase();
+        System.out.println(local);
+        return local.split(" ")[0];
+    }
+    /**
+     * Retrieves the current instruction in the write back stage.
+     * @return A {@code String} The current instruction in the write back stage.
+     */
+    public String instructionInWriteBackStage(){
+        if(writeBackStage.getInstruction()==null)
+            return "";
+        String local=writeBackStage.getInstruction();
+        local=local.toUpperCase();
+        System.out.println(local);
+        return local.split(" ")[0];
+    }
+    public List<String> highlightIF(){
+        return HighlightInstructionFetch.componentsToHighlight();
+    }
+    public List<String> highlightID(){
+        return HighlightInstructionDecode.componentsToHighlight(instructionDecode.getInstruction());
+    }
+    public List<String> notHighlightID(){
+        return HighlightInstructionDecode.componentsToNotHighlight(instructionDecode.getInstruction());
+    }
+    public List<String> highlightEX(){
+        return HighlightInstructionExecute.componentsToHighlight(instructionExecute.getInstruction());
+    }
+    public List<String> notHighlightEX(){
+        return HighlightInstructionExecute.componentsToNotHighlight(instructionExecute.getInstruction());
+    }
+    public List<String> highlightMEM(){
+        return HighlightMemoryStage.componentsToHighlight(memoryStage.getInstruction());
+    }
+    public List<String> notHighlightMEM(){
+        return HighlightMemoryStage.componentsToNotHighlight(memoryStage.getInstruction());
+    }
+    public List<String> highlightWB(){
+        return HighlightWriteback.componentsToHighlight(writeBackStage.getInstruction());
+    }
+    public List<String> notHighlightWB(){
+        return HighlightWriteback.componentsToNotHighlight(writeBackStage.getInstruction());
     }
 
 }

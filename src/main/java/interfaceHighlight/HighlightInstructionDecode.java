@@ -35,4 +35,13 @@ public class HighlightInstructionDecode {
         }
         return highlightComponents;
     }
+    public static List<String> componentsToNotHighlight(String instruction){
+        List<String> highlightComponents = new ArrayList<>();
+        for (Map.Entry<String, List<String>> entry : instructionMap.entrySet()) {
+            if (!entry.getValue().contains(instruction)) {
+                highlightComponents.add(entry.getKey());
+            }
+        }
+        return highlightComponents;
+    }
 }

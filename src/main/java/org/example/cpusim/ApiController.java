@@ -40,7 +40,6 @@ public class ApiController {
     public String getInstructions(){
         try{
             String filePath = "C:/Users/Zach/Desktop/ComputerS/year3/sem1/structure of computer systems/CPUSim/src/main/resources/instructions.txt";
-
             return new String(Files.readAllBytes(Paths.get(filePath)));
         }catch (IOException e){
             return e.getMessage();
@@ -98,6 +97,46 @@ public class ApiController {
             e.getMessage();
             return "Error getting the hazards logs!";
         }
+    }
+
+    @GetMapping("api/highlightInstructionFetch")
+    public List<String> getHighlightIF(){
+        List<String> highlightIF;
+        highlightIF=mips.highlightIF();
+        return highlightIF != null ? highlightIF : new ArrayList<>();
+    }
+    @GetMapping("api/highlightInstructionDecode")
+    public List<String> getHighlightID(){
+        List<String> highlightID;
+        highlightID=mips.highlightID();
+        return highlightID != null ? highlightID : new ArrayList<>();
+    }
+    @GetMapping("api/highlightInstructionExecute")
+    public List<String> getHighlightEX(){
+        List<String> highlightEX;
+        highlightEX=mips.highlightEX();
+        return  highlightEX != null ? highlightEX : new ArrayList<>();
+    }
+    @GetMapping("api/highlightMemoryStage")
+    public List<String> getHighlightMEM(){
+        List<String> highlightMEM;
+        highlightMEM=mips.highlightMEM();
+        return highlightMEM != null ? highlightMEM : new ArrayList<>();
+    }
+    @GetMapping("api/highlightWriteBackStage")
+    public List<String> getHighlightWB(){
+        List<String> highlightWB;
+        highlightWB=mips.highlightWB();
+        return highlightWB != null ? highlightWB : new ArrayList<>();
+    }
+    @GetMapping("api/notHighlight")
+    public List<String> getNotHighLight(){
+        List<String> notHighlight= new ArrayList<>();
+        notHighlight.addAll(mips.notHighlightID());
+        notHighlight.addAll(mips.notHighlightEX());
+        notHighlight.addAll(mips.notHighlightMEM());
+        notHighlight.addAll(mips.notHighlightWB());
+        return notHighlight;
     }
 
     @PostMapping("api/start")

@@ -1,15 +1,26 @@
-import React, { useState, useEffect, useCallback } from "react";
-import MIPS from "./MIPS.svg";
+import React, {useState, useEffect, useCallback, useRef} from "react";
+import SvgHighlighter from "./SvgHighlighter";
 import './SimulationPage.css'
+import Mips from "./Mips";
 
 const SimulationPage = () => {
+
+    const svgRef = useRef(null);
+
     const [instructions, setInstructions] = useState([]);
     const [registerFile, setRegisterFile] = useState([]);
     const [aluData, setAluData] = useState("");
     const [memoryData, setMemoryData] = useState([]);
     const [isRunning, setIsRunning] = useState(false);
     const [activeInstructionIndexes, setActiveInstructionIndexes] = useState([]); // Updated state for active instruction indexes
+    //state for the highlighted instructions
+    const [highlightIF, setHighlightIF] = useState([]);
+    const [highlightID, setHighlightID] = useState([]);
+    const [highlightEX, setHighlightEX] = useState([]);
+    const [highlightMEM, setHighlightMEM] = useState([]);
+    const [highlightWB, setHighlightWB] = useState([]);
 
+    const [notHighlight, setNotHighlight] = useState([]);
     // Interval ID for polling
     const [pollingInterval, setPollingInterval] = useState(null);
 
@@ -20,8 +31,31 @@ const SimulationPage = () => {
                 fetch("/api/registerFile").then(res => res.json()),
                 fetch("/api/aluData").then(res => res.text()),
                 fetch("/api/memoryData").then(res => res.json()),
-                fetch("/api/currentInstructionIndex").then(res => res.json()), // Fetch the active instructions list
+                fetch("/api/currentInstructionIndex").then(res => res.json()),
             ]);
+            const [
+                highlightIFResponse,
+                highlightIDResponse,
+                highlightEXResponse,
+                highlightMEMResponse,
+                highlightWBResponse,
+                notHighlightResponse,
+            ] = await Promise.all([
+                fetch("/api/highlightInstructionFetch").then(res => res.json()),
+                fetch("/api/highlightInstructionDecode").then(res => res.json()),
+                fetch("/api/highlightInstructionExecute").then(res => res.json()),
+                fetch("/api/highlightMemoryStage").then(res => res.json()),
+                fetch("/api/highlightWriteBackStage").then(res => res.json()),
+                fetch("api/notHighlight").then(res => res.json()),
+            ]);
+
+            setHighlightIF(highlightIFResponse || []);
+            setHighlightID(highlightIDResponse || []);
+            setHighlightEX(highlightEXResponse || []);
+            setHighlightMEM(highlightMEMResponse || []);
+            setHighlightWB(highlightWBResponse || []);
+            setNotHighlight(notHighlightResponse || []);
+
 
             setInstructions(Array.isArray(instructionsResponse) ? instructionsResponse : []);
             setRegisterFile(Object.entries(registerResponse).map(([key, value]) => `${key}: ${value} `));
@@ -35,7 +69,7 @@ const SimulationPage = () => {
 
     const startPolling = () => {
         if (!pollingInterval) {
-            const intervalId = setInterval(fetchSimulationData, 500); // Fetch every second
+            const intervalId = setInterval(fetchSimulationData, 1000); // Fetch every second
             setPollingInterval(intervalId);
         }
     };
@@ -129,7 +163,22 @@ const SimulationPage = () => {
                 </div>
             </div>
             <div className="mips-section">
-                <img src={MIPS} className="App-logo" alt="MIPS Diagram"/>
+                <div id="mips-diagram-container">
+                    <div id="mips-diagram" ref={svgRef}>
+                        <Mips/> {/* Render the React SVG component */}
+                    </div>
+                    <SvgHighlighter
+                        svgRef={svgRef} // Pass the ref to the highlighter
+                        activeComponents={[
+                            ...highlightIF.map(component => ({id: component, color: "purple"})),
+                            ...highlightID.map(component => ({id: component, color: "orange"})),
+                            ...highlightEX.map(component => ({id: component, color: "green"})),
+                            ...highlightMEM.map(component => ({id: component, color: "blue"})),
+                            ...highlightWB.map(component => ({id: component, color: "red"})),
+                            ...notHighlight.map(component => ({id: component, color: "black"})),
+                        ]}
+                    />
+                </div>
                 <div className="buttons">
                     <button className="btn" onClick={startSimulation} disabled={isRunning}>Start</button>
                     <button className="btn" onClick={nextClockCycle} disabled={!isRunning}>Next</button>

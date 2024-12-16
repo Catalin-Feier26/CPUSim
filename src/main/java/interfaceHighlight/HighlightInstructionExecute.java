@@ -45,4 +45,16 @@ public class HighlightInstructionExecute {
         }
         return highlightComponents;
     }
+    public static List<String> componentsToNotHighlight(String instruction){
+        List<String> highlightComponents = new ArrayList<>();
+        instructionMap.replaceAll((key,value) -> value.stream()
+                .filter(instr -> !instr.equals("X"))
+                .toList());
+        for (Map.Entry<String, List<String>> entry : instructionMap.entrySet()) {
+            if(!entry.getValue().contains(instruction)){
+                highlightComponents.add(entry.getKey());
+            }
+        }
+        return highlightComponents;
+    }
 }
