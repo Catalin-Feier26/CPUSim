@@ -12,7 +12,13 @@ const SimulationPage = () => {
     const [aluData, setAluData] = useState("");
     const [memoryData, setMemoryData] = useState([]);
     const [isRunning, setIsRunning] = useState(false);
-    const [activeInstructionIndexes, setActiveInstructionIndexes] = useState([]); // Updated state for active instruction indexes
+    // Active instructions from each stage
+    const [activeIF, setActiveIF] = useState(null);
+    const [activeID, setActiveID] = useState(null);
+    const [activeEX, setActiveEX] = useState(null);
+    const [activeMEM, setActiveMEM] = useState(null);
+    const [activeWB, setActiveWB] = useState(null);
+
     //state for the highlighted instructions
     const [highlightIF, setHighlightIF] = useState([]);
     const [highlightID, setHighlightID] = useState([]);
@@ -26,13 +32,26 @@ const SimulationPage = () => {
 
     const fetchSimulationData = async () => {
         try {
-            const [instructionsResponse, registerResponse, aluResponse, memoryResponse, activeInstructionIndexesResponse] = await Promise.all([
+            const [instructionsResponse, registerResponse, aluResponse, memoryResponse] = await Promise.all([
                 fetch("/api/arrayInstructions").then(res => res.json()),
                 fetch("/api/registerFile").then(res => res.json()),
                 fetch("/api/aluData").then(res => res.text()),
                 fetch("/api/memoryData").then(res => res.json()),
-                fetch("/api/currentInstructionIndex").then(res => res.json()),
             ]);
+            const [activeIFResponse, activeIDResponse, activeEXResponse, activeMEMResponse, activeWBResponse] = await Promise.all([
+                fetch("/api/activeIF").then(res => res.text()),
+                fetch("/api/activeID").then(res => res.text()),
+                fetch("/api/activeEX").then(res => res.text()),
+                fetch("/api/activeMEM").then(res => res.text()),
+                fetch("/api/activeWB").then(res => res.text()),
+            ]);
+
+            setActiveIF(activeIFResponse);
+            setActiveID(activeIDResponse);
+            setActiveEX(activeEXResponse);
+            setActiveMEM(activeMEMResponse);
+            setActiveWB(activeWBResponse);
+
             const [
                 highlightIFResponse,
                 highlightIDResponse,
@@ -61,7 +80,6 @@ const SimulationPage = () => {
             setRegisterFile(Object.entries(registerResponse).map(([key, value]) => `${key}: ${value} `));
             setAluData(aluResponse || "No ALU data available.");
             setMemoryData(Object.entries(memoryResponse));
-            setActiveInstructionIndexes(activeInstructionIndexesResponse); // Set the active instruction indexes
         } catch (error) {
             console.error("Error fetching simulation data:", error);
         }
@@ -129,11 +147,20 @@ const SimulationPage = () => {
             <div className="instructions-section">
                 <h2>Final Instructions</h2>
                 <ul>
-                    {instructions.map((instruction, index) => (
-                        <li key={index} className={activeInstructionIndexes.includes(index) ? "highlighted" : ""}>
-                            {instruction}
-                        </li>
-                    ))}
+                    {instructions.map((instruction, index) => {
+                        let highlightClass = "";
+                        if (activeIF === String(index)) highlightClass = "highlightIF";
+                        if (activeID === String(index)) highlightClass = "highlightID";
+                        if (activeEX === String(index)) highlightClass = "highlightEX";
+                        if (activeMEM === String(index)) highlightClass = "highlightMEM";
+                        if (activeWB === String(index)) highlightClass = "highlightWB";
+
+                        return (
+                            <li key={index} className={highlightClass}>
+                                {instruction}
+                            </li>
+                        );
+                    })}
                 </ul>
             </div>
             <div className="data-section">

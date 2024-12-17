@@ -232,7 +232,21 @@ public class MIPSController implements Runnable {
             activeIndexes.add(writeBackStage.instructionIndex);
         return activeIndexes;
     }
-
+    public Integer activeIF(){
+        return instructionFetch.instructionIndex;
+    }
+    public Integer activeID(){
+        return instructionDecode.instructionIndex;
+    }
+    public Integer activeEX(){
+        return instructionExecute.instructionIndex;
+    }
+    public Integer activeMEM(){
+        return memoryStage.instructionIndex;
+    }
+    public Integer activeWB(){
+        return writeBackStage.instructionIndex;
+    }
     /**
      * Retrieves the current instruction in the instruction fetch stage.
      * @return A {@code String} The current instruction in the instruction fetch stage.

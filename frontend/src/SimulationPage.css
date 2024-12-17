@@ -133,6 +133,47 @@ button:hover {
     0% { background-color: #FFD700; }
     100% { background-color: transparent; }
 }
-.test1{
-    color: #61dafb;
+.highlightIF{
+    background-color: #b749fc;
+    animation: activeIF 1s ease-in-out;
+}
+@keyframes activeIF {
+    0% { background-color: #b749fc; }
+    100% { background-color: transparent; }
+}
+.highlightID{
+    background-color: #fff050;
+    animation: activeID 1s ease-in-out;
+}
+@keyframes activeID {
+    0% { background-color: #fff650; }
+    100% { background-color: transparent; }
+
+}
+.highlightEX{
+    background-color: #0ebb10;
+    animation: activeEX 1s ease-in-out;
+}
+@keyframes activeEX {
+    0% { background-color: #0ebb10; }
+    100% { background-color: transparent; }
+
+}
+.highlightMEM{
+    background-color: #5076ff;
+    animation: activeMEM 1s ease-in-out;
+}
+@keyframes activeMEM {
+    0% { background-color: #5076ff; }
+    100% { background-color: transparent; }
+
+}
+.highlightWB{
+    background-color: #ff5050;
+    animation: activeWB 1s ease-in-out;
+}
+@keyframes activeWB {
+    0% { background-color: #ff5050; }
+    100% { background-color: transparent; }
+
 }

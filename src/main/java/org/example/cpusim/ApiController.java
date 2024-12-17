@@ -99,6 +99,27 @@ public class ApiController {
         }
     }
 
+    @GetMapping("api/activeIF")
+    public int getCurrentIF(){
+        return mips.activeIF();
+    }
+    @GetMapping("api/activeID")
+    public int getCurrentID(){
+        return mips.activeID();
+    }
+    @GetMapping("api/activeEX")
+    public int getCurrentEX(){
+        return mips.activeEX();
+    }
+    @GetMapping("api/activeMEM")
+    public int getCurrentMEM(){
+        return mips.activeMEM();
+    }
+    @GetMapping("api/activeWB")
+    public int getCurrentWB(){
+        return mips.activeWB();
+    }
+
     @GetMapping("api/highlightInstructionFetch")
     public List<String> getHighlightIF(){
         List<String> highlightIF;

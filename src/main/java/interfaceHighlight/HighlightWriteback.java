@@ -23,7 +23,7 @@ public class HighlightWriteback {
     public static List<String> componentsToHighlight(String instruction) {
         List<String> highlightComponents = new ArrayList<>();
         for (Map.Entry<String, List<String>> entry : instructionMap.entrySet()) {
-            if (entry.getValue().contains(instruction)) {
+            if (entry.getValue().contains(instruction.toUpperCase().split(" ")[0])) {
                 highlightComponents.add(entry.getKey());
             }
         }
@@ -32,7 +32,7 @@ public class HighlightWriteback {
     public static List<String> componentsToNotHighlight(String instruction) {
         List<String> highlightComponents = new ArrayList<>();
         for (Map.Entry<String, List<String>> entry : instructionMap.entrySet()) {
-            if (!entry.getValue().contains(instruction)) {
+            if (!entry.getValue().contains(instruction.toUpperCase().split(" ")[0])) {
                 highlightComponents.add(entry.getKey());
             }
         }
