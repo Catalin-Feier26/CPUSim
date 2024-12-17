@@ -236,7 +236,7 @@ public class MIPSController implements Runnable {
         return instructionFetch.instructionIndex;
     }
     public Integer activeID(){
-        return instructionDecode.instructionIndex;
+        return instructionDecode.instructionIndex-1;
     }
     public Integer activeEX(){
         return instructionExecute.instructionIndex;

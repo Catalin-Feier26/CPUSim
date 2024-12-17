@@ -102,14 +102,6 @@ const SimulationPage = () => {
 
     const stopSimulation = async () => {
         try {
-
-            if (svgRef.current) {
-                const svgElements = svgRef.current.querySelectorAll('[id]');
-                svgElements.forEach((element) => {
-                    element.style.stroke = "black";
-                });
-            }
-
             const response = await fetch('/api/stop', { method: 'POST' });
             if (response.ok) {
                 setIsRunning(false);

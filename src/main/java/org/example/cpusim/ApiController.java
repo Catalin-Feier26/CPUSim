@@ -120,6 +120,17 @@ public class ApiController {
         return mips.activeWB();
     }
 
+    @GetMapping("api/activeStages")
+    public Map<String, Integer> getActiveStages() {
+        return Map.of(
+                "activeIF", mips.activeIF(),
+                "activeID", mips.activeID(),
+                "activeEX", mips.activeEX(),
+                "activeMEM", mips.activeMEM(),
+                "activeWB", mips.activeWB()
+        );
+    }
+
     @GetMapping("api/highlightInstructionFetch")
     public List<String> getHighlightIF(){
         List<String> highlightIF;

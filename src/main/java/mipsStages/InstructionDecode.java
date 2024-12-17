@@ -99,7 +99,7 @@ public class InstructionDecode {
      */
     private void setInstruction(){
         this.instruction=this.ifidRegister.getInstruction();
-        instructionIndex=pc-1;
+        instructionIndex= ifidRegister.instructionIndex;
     }
     /**
      * Sets the program counter (PC) from the IF/ID pipeline register.

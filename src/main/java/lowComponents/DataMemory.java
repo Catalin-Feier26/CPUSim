@@ -35,11 +35,10 @@ public class DataMemory {
      * Gets the value of a memory address.
      * @param address
      * @return int The value of the memory address.
-     * @throws IllegalArgumentException if the memory address does not exist.
      */
-    public int readMemory(int address) throws IllegalArgumentException {
+    public int readMemory(int address){
         if(!memory.containsKey(address))
-            throw new IllegalArgumentException("Memory address does not exist");
+            return 0;
         return memory.get(address);
     }
 
