@@ -13,11 +13,14 @@ const SimulationPage = () => {
     const [memoryData, setMemoryData] = useState([]);
     const [isRunning, setIsRunning] = useState(false);
     // Active instructions from each stage
-    const [activeIF, setActiveIF] = useState(null);
-    const [activeID, setActiveID] = useState(null);
-    const [activeEX, setActiveEX] = useState(null);
-    const [activeMEM, setActiveMEM] = useState(null);
-    const [activeWB, setActiveWB] = useState(null);
+    const [activeStages, setActiveStages] = useState({
+        activeIF: null,
+        activeID: null,
+        activeEX: null,
+        activeMEM: null,
+        activeWB: null,
+    });
+
 
     //state for the highlighted instructions
     const [highlightIF, setHighlightIF] = useState([]);
@@ -38,19 +41,8 @@ const SimulationPage = () => {
                 fetch("/api/aluData").then(res => res.text()),
                 fetch("/api/memoryData").then(res => res.json()),
             ]);
-            const [activeIFResponse, activeIDResponse, activeEXResponse, activeMEMResponse, activeWBResponse] = await Promise.all([
-                fetch("/api/activeIF").then(res => res.text()),
-                fetch("/api/activeID").then(res => res.text()),
-                fetch("/api/activeEX").then(res => res.text()),
-                fetch("/api/activeMEM").then(res => res.text()),
-                fetch("/api/activeWB").then(res => res.text()),
-            ]);
-
-            setActiveIF(activeIFResponse);
-            setActiveID(activeIDResponse);
-            setActiveEX(activeEXResponse);
-            setActiveMEM(activeMEMResponse);
-            setActiveWB(activeWBResponse);
+            const activeStagesResponse = await fetch("/api/activeStages").then(res => res.json());
+            setActiveStages(activeStagesResponse);
 
             const [
                 highlightIFResponse,
@@ -110,6 +102,14 @@ const SimulationPage = () => {
 
     const stopSimulation = async () => {
         try {
+
+            if (svgRef.current) {
+                const svgElements = svgRef.current.querySelectorAll('[id]');
+                svgElements.forEach((element) => {
+                    element.style.stroke = "black";
+                });
+            }
+
             const response = await fetch('/api/stop', { method: 'POST' });
             if (response.ok) {
                 setIsRunning(false);
@@ -149,12 +149,11 @@ const SimulationPage = () => {
                 <ul>
                     {instructions.map((instruction, index) => {
                         let highlightClass = "";
-                        if (activeIF === String(index)) highlightClass = "highlightIF";
-                        if (activeID === String(index)) highlightClass = "highlightID";
-                        if (activeEX === String(index)) highlightClass = "highlightEX";
-                        if (activeMEM === String(index)) highlightClass = "highlightMEM";
-                        if (activeWB === String(index)) highlightClass = "highlightWB";
-
+                        if (activeStages.activeIF === index) highlightClass = "highlightIF";
+                        if (activeStages.activeID === index) highlightClass = "highlightID";
+                        if (activeStages.activeEX === index) highlightClass = "highlightEX";
+                        if (activeStages.activeMEM === index) highlightClass = "highlightMEM";
+                        if (activeStages.activeWB === index) highlightClass = "highlightWB";
                         return (
                             <li key={index} className={highlightClass}>
                                 {instruction}
