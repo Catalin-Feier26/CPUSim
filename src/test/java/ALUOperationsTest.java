@@ -63,6 +63,19 @@ public class ALUOperationsTest {
 
         result = AirthmeticLogicUnit.mult(Integer.MAX_VALUE, 2);
         assertEquals(0, result[0], "High bits of multiplication with MAX_VALUE and 2");
+
+        // Test with negative numbers
+        result = AirthmeticLogicUnit.mult(-a, b);
+        assertEquals(-1, result[0], "High bits of multiplication result with negative values should be -1");
+        assertEquals(-15, result[1], "Low bits of multiplication result with negative values should be -15");
+
+        result = AirthmeticLogicUnit.mult(a, -b);
+        assertEquals(-1, result[0], "High bits of multiplication result with negative second operand should be -1");
+        assertEquals(-15, result[1], "Low bits of multiplication result with negative second operand should be -15");
+
+        result = AirthmeticLogicUnit.mult(-a, -b);
+        assertEquals(0, result[0], "High bits of multiplication result with both operands negative should be 0");
+        assertEquals(15, result[1], "Low bits of multiplication result with both operands negative should be 15");
     }
 
     @Test
@@ -73,7 +86,21 @@ public class ALUOperationsTest {
 
         result = AirthmeticLogicUnit.div(Integer.MAX_VALUE, 1);
         assertEquals(Integer.MAX_VALUE, result[0], "Quotient should be MAX_VALUE when dividing MAX_VALUE by 1");
+
+        // Test with negative numbers
+        result = AirthmeticLogicUnit.div(-a, b);
+        assertEquals(-1, result[0], "Quotient should be -1 when dividing negative numerator by positive denominator");
+        assertEquals(-2, result[1], "Remainder should be -2 when dividing negative numerator by positive denominator");
+
+        result = AirthmeticLogicUnit.div(a, -b);
+        assertEquals(-1, result[0], "Quotient should be -1 when dividing positive numerator by negative denominator");
+        assertEquals(2, result[1], "Remainder should be 2 when dividing positive numerator by negative denominator");
+
+        result = AirthmeticLogicUnit.div(-a, -b);
+        assertEquals(1, result[0], "Quotient should be 1 when dividing negative numerator by negative denominator");
+        assertEquals(-2, result[1], "Remainder should be -2 when dividing negative numerator by negative denominator");
     }
+
 
     @Test
     public void testSlt() {
