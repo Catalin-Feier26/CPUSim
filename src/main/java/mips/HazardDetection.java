@@ -155,24 +155,19 @@ public class HazardDetection {
      */
     private boolean destinationMatchesSources(String[] parts, String match){
         switch (parts[0]){
-            // -
             case "NOP", "MFHI", "MFLO", "J": return false;
-            // 2 3
             case "ADD", "SUB", "AND", "OR", "NAND", "XOR", "NOR", "SLLV", "SRLV", "SLT":
                 if (match.equals(parts[2]) || match.equals(parts[3]))
                     return  true;
                 break;
-            //  1 2
             case "MULT", "DIV", "BEQ", "BNE", "BGEZ", "BLTZ":
                 if(match.equals(parts[1])||match.equals(parts[2]))
                     return true;
                 break;
-            // 2
             case "MOV", "SLL", "SRL", "SRA", "ADDI", "SUBI","ANDI","ORI","XORI","SLTI":
                 if(match.equals(parts[2]))
                     return true;
                 break;
-            // 1
             case "JR", "MTHI", "MTLO":
                 if(match.equals(parts[1]))
                     return true;
@@ -180,7 +175,28 @@ public class HazardDetection {
             case "JAL":
                 if(match.equals("R31"))
                     return true;
+            case "LW":
+                if (parts.length >= 3 && parts[2].contains("(")) {
+                    String[] offsetAndBase = parts[2].split("[()]");
+                    if (offsetAndBase.length == 2 && match.equals(offsetAndBase[1])) {
+                        return true; // Match with the base register
+                    }
+                } else if (parts.length >= 2 && match.equals(parts[1])) {
+                    return true; // Match with the destination register (rt)
+                }
                 break;
+            case "SW":
+                if (parts.length >= 3 && parts[2].contains("(")) {
+                    String[] offsetAndBase = parts[2].split("[()]");
+                    if (offsetAndBase.length == 2 && (match.equals(offsetAndBase[1]) || match.equals(parts[1]))) {
+                        return true; // Match with base register or source register
+                    }
+                } else if (parts.length >= 2 && match.equals(parts[1])) {
+                    return true; // Match with the source register
+                }
+                break;
+
+
         }
         return false;
     }
@@ -244,10 +260,10 @@ public class HazardDetection {
      * @return the destination register or "R0" if none exists.
      */
     private String decodeIType(String[] parts){
-        switch (parts[0]){
-            case "ADDI", "SUBI", "ANDI", "ORI", "XORI", "LW", "SLTI": return parts[1];
-        }
-        return "R0";
+        return switch (parts[0]) {
+            case "ADDI", "SUBI", "ANDI", "ORI", "XORI", "LW", "SLTI" -> parts[1];
+            default -> "R0";
+        };
     }
     /**
      * Determines if a register is writable.
