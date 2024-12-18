@@ -124,8 +124,12 @@ public class AirthmeticLogicUnit {
      * @return int The result of the shift left operation
      */
     public static int SL(int a, int b) {
+        if (b >= 32) {
+            return 0;  // Return 0 for shifts greater than or equal to 32
+        }
         return a << b;
     }
+
     /**
      * The shift right operation
      * @param a The number to be shifted

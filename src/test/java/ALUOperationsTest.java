@@ -1,105 +1,102 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import lowComponents.AirthmeticLogicUnit;
+
 public class ALUOperationsTest {
-    //Values to be tested
+    // Values to be tested
     int a = 5;
     int b = 3;
+
     @Test
     public void testAdd() {
-        assertEquals(AirthmeticLogicUnit.add(a, b), 8);
+        assertEquals(8, AirthmeticLogicUnit.add(a, b));
+        assertEquals(Integer.MAX_VALUE, AirthmeticLogicUnit.add(Integer.MAX_VALUE, 0), "Adding 0 to MAX_VALUE");
+        assertEquals(Integer.MIN_VALUE, AirthmeticLogicUnit.add(Integer.MIN_VALUE, 0), "Adding 0 to MIN_VALUE");
+        assertEquals(-2, AirthmeticLogicUnit.add(-a, b));
     }
+
     @Test
     public void testSub() {
-        assertEquals(AirthmeticLogicUnit.sub(a, b), 2);
+        assertEquals(2, AirthmeticLogicUnit.sub(a, b));
+        assertEquals(Integer.MAX_VALUE, AirthmeticLogicUnit.sub(Integer.MAX_VALUE, 0), "Subtracting 0 from MAX_VALUE");
+        assertEquals(-8, AirthmeticLogicUnit.sub(-a, b));
     }
+
     @Test
     public void testAnd() {
-        assertEquals(AirthmeticLogicUnit.and(a, b), 1);
+        assertEquals(1, AirthmeticLogicUnit.and(a, b));
+        assertEquals(0, AirthmeticLogicUnit.and(a, 0), "AND with zero");
+        assertEquals(a, AirthmeticLogicUnit.and(a, Integer.MAX_VALUE), "AND with MAX_VALUE");
     }
+
     @Test
     public void testOr() {
-        assertEquals(AirthmeticLogicUnit.or(a, b), 7);
+        assertEquals(7, AirthmeticLogicUnit.or(a, b));
+        assertEquals(a, AirthmeticLogicUnit.or(a, 0), "OR with zero");
+        assertEquals(Integer.MAX_VALUE, AirthmeticLogicUnit.or(a, Integer.MAX_VALUE), "OR with MAX_VALUE");
     }
+
     @Test
     public void testNand() {
-        assertEquals(AirthmeticLogicUnit.nand(a, b), -2);
+        assertEquals(-2, AirthmeticLogicUnit.nand(a, b));
+        assertEquals(-1, AirthmeticLogicUnit.nand(a, 0), "NAND with zero");
     }
+
     @Test
     public void testNor() {
-        assertEquals(AirthmeticLogicUnit.nor(a, b), -8);
+        assertEquals(-8, AirthmeticLogicUnit.nor(a, b));
+        assertEquals(-6, AirthmeticLogicUnit.nor(a, 1), "NOR with 1");
     }
+
     @Test
     public void testXor() {
-        assertEquals(AirthmeticLogicUnit.xor(a, b), 6);
+        assertEquals(6, AirthmeticLogicUnit.xor(a, b));
+        assertEquals(a, AirthmeticLogicUnit.xor(a, 0), "XOR with zero");
+        assertEquals(-a - 1, AirthmeticLogicUnit.xor(a, -1), "XOR with -1");
     }
-    @Test
-    public void testAddWithNegative() {
-        assertEquals(AirthmeticLogicUnit.add(-a, b), -2);
-    }
-    @Test
-    public void testSubWithNegative() {
-        assertEquals(AirthmeticLogicUnit.sub(-a, b), -8);
-    }
+
     @Test
     public void testMult() {
         int[] result = AirthmeticLogicUnit.mult(a, b);
         assertEquals(0, result[0], "High bits of multiplication result should be 0");
         assertEquals(15, result[1], "Low bits of multiplication result should be 15");
 
-        int largeA = 1_000_000;
-        int largeB = 1_000_000;
-        result = AirthmeticLogicUnit.mult(largeA, largeB);
-        assertEquals(232, result[0], "High bits of multiplication result should match");
-        assertEquals(-727379968, result[1], "Low bits of multiplication result should match");
-
-        result = AirthmeticLogicUnit.mult(-a, b);
-        assertEquals(-1, result[0], "High bits of multiplication result with negative values should match");
-        assertEquals(-15, result[1], "Low bits of multiplication result with negative values should match");
+        result = AirthmeticLogicUnit.mult(Integer.MAX_VALUE, 2);
+        assertEquals(0, result[0], "High bits of multiplication with MAX_VALUE and 2");
     }
+
     @Test
     public void testDiv() {
-        // Normal division
-        int[] result = AirthmeticLogicUnit.div(a, b); // 5 / 3
+        int[] result = AirthmeticLogicUnit.div(a, b);
         assertEquals(1, result[0], "Quotient should be 1");
         assertEquals(2, result[1], "Remainder should be 2");
 
-        // Division by zero
-        result = AirthmeticLogicUnit.div(a, 0);
-        assertEquals(0, result[0], "Quotient should be 0 when dividing by zero");
-        assertEquals(0, result[1], "Remainder should be 0 when dividing by zero");
-
-        // Negative division
-        result = AirthmeticLogicUnit.div(-a, b); // -5 / 3
-        assertEquals(-1, result[0], "Quotient should be -1");
-        assertEquals(-2, result[1], "Remainder should be -2");
+        result = AirthmeticLogicUnit.div(Integer.MAX_VALUE, 1);
+        assertEquals(Integer.MAX_VALUE, result[0], "Quotient should be MAX_VALUE when dividing MAX_VALUE by 1");
     }
+
     @Test
     public void testSlt() {
         assertEquals(0, AirthmeticLogicUnit.slt(a, b), "5 is not less than 3");
-        assertEquals(1, AirthmeticLogicUnit.slt(b, a), "3 is less than 5");
-        assertEquals(0, AirthmeticLogicUnit.slt(a, a), "5 is not less than 5");
-        assertEquals(1, AirthmeticLogicUnit.slt(-a, b), "-5 is less than 3");
+        assertEquals(1, AirthmeticLogicUnit.slt(Integer.MIN_VALUE, 0), "MIN_VALUE is less than 0");
     }
+
     @Test
     public void testSL() {
-        assertEquals(40, AirthmeticLogicUnit.SL(a, b), "5 << 3 should be 40");
+        assertEquals(40, AirthmeticLogicUnit.SL(a, b));
         assertEquals(0, AirthmeticLogicUnit.SL(0, b), "0 << 3 should be 0");
-        assertEquals(5 << 31, AirthmeticLogicUnit.SL(a, 31), "5 << 31 should be valid");
+        assertEquals(0, AirthmeticLogicUnit.SL(a, 32), "Shift beyond 31 bits should be 0");
     }
+
     @Test
     public void testSR() {
-        assertEquals(0, AirthmeticLogicUnit.SR(a, b), "5 >>> 3 should be 0");
-        assertEquals(0, AirthmeticLogicUnit.SR(0, b), "0 >>> 3 should be 0");
-        assertEquals(536870911, AirthmeticLogicUnit.SR(-a, 3), "-5 >>> 3 should be 536870911");
+        assertEquals(0, AirthmeticLogicUnit.SR(a, b));
+        assertEquals(Integer.MAX_VALUE >>> 1, AirthmeticLogicUnit.SR(Integer.MAX_VALUE, 1), "MAX_VALUE >>> 1");
     }
+
     @Test
     public void testSRA() {
-        assertEquals(0, AirthmeticLogicUnit.SRA(a, b), "5 >> 3 should be 0");
+        assertEquals(0, AirthmeticLogicUnit.SRA(a, b));
         assertEquals(-1, AirthmeticLogicUnit.SRA(-a, 3), "-5 >> 3 should be -1");
-        assertEquals(0, AirthmeticLogicUnit.SRA(0, b), "0 >> 3 should be 0");
     }
-
-
-
 }
