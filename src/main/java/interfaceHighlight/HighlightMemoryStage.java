@@ -26,6 +26,11 @@ public class HighlightMemoryStage {
         instructionMap.put("cd8qKU7NTefS5XSN2jCu-34", List.of("X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "JR", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "BEQ", "BNE", "BGEZ", "BLTZ", "X", "J", "JAL"));
     }
 
+    /**
+     * Returns the components that should be highlighted for the given instruction
+     * @param instruction The instruction to be decoded
+     * @return List<String> The components to be highlighted
+     */
     public static List<String> componentsToHighlight(String instruction) {
         List<String> highlightComponents = new ArrayList<>();
         for (Map.Entry<String, List<String>> entry : instructionMap.entrySet()) {
@@ -35,6 +40,12 @@ public class HighlightMemoryStage {
         }
         return highlightComponents;
     }
+
+    /**
+     * Returns the components that should not be highlighted for the given instruction
+     * @param instruction The instruction to be decoded
+     * @return List<String> The components to not be highlighted
+     */
     public static List<String> componentsToNotHighlight(String instruction){
         List<String> highlightComponents = new ArrayList<>();
         for (Map.Entry<String, List<String>> entry : instructionMap.entrySet()) {

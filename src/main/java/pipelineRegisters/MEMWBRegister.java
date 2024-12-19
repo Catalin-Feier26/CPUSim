@@ -60,15 +60,35 @@ public class MEMWBRegister {
         instruction="";
         instructionIndex=-1;
     }
+
+    /**
+     * Sets the instruction in the MEMWBRegister
+     * @return String The instruction in the MEMWBRegister
+     */
     public boolean getLoWrite() {
         return loWrite;
     }
+
+    /**
+     * Sets the instruction in the MEMWBRegister
+     * @param loWrite The instruction in the MEMWBRegister
+     */
     public void setLoWrite(boolean loWrite) {
         this.loWrite = loWrite;
     }
+
+    /**
+     * Sets the instruction in the MEMWBRegister
+     * @return String The instruction in the MEMWBRegister
+     */
     public boolean getHiWrite() {
         return hiWrite;
     }
+
+    /**
+     * Sets the instruction in the MEMWBRegister
+     * @param hiWrite The instruction in the MEMWBRegister
+     */
     public void setHiWrite(boolean hiWrite) {
         this.hiWrite = hiWrite;
     }
@@ -136,25 +156,52 @@ public class MEMWBRegister {
         this.readData = readData;
     }
 
+    /**
+     * Sets the value of the hi register.
+     * @param hi The value to be set.
+     */
     public void setHi(int hi) {
         this.hi = hi;
     }
+
+    /**
+     * Gets the value of the hi register.
+     * @return int The value of the hi register.
+     */
     public int getHi(){
         return hi;
     }
+
+    /**
+     * Sets the value of the lo register.
+     * @param lo The value to be set.
+     */
     public void setLo(int lo){
         this.lo=lo;
     }
+
+    /**
+     * Gets the value of the lo register.
+     * @return int The value of the lo register.
+     */
     public int getLo(){
         return lo;
     }
+    /**
+     * Sets the register that will be written to.
+     * @param writeRegister The register that will be written to.
+     */
     public void setWriteRegister(Register writeRegister){
         this.writeRegister=writeRegister;
     }
+
+    /**
+     * Returns the register that will be written to.
+     * @return Register The register that will be written to.
+     */
     public Register getWriteRegister(){
         return  writeRegister;
     }
-
     /**
      * Returns a string representation of the MEMWBRegister object.
      * @return String The string representation of the MEMWBRegister object.

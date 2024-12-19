@@ -252,7 +252,7 @@ public class IDEXRegister {
 
     /**
      * Sets the value of the ALU Source control signal.
-     * @param aluSrc
+     * @param aluSrc The value to be set.
      */
     public void setAluSrc(boolean aluSrc) {
         this.aluSrc = aluSrc;
@@ -347,7 +347,7 @@ public class IDEXRegister {
 
     /**
      * Sets the value of the Read Data 2. RD2
-     * @param readData2
+     * @param readData2 The value to be set.
      */
     public void setReadData2(int readData2) {
         this.readData2 = readData2;
@@ -355,7 +355,7 @@ public class IDEXRegister {
 
     /**
      * Gets the value of the Sign Extend.
-     * @return
+     * @return int The value of the Sign Extend.
      */
     public int getSignExtend() {
         return signExtend;

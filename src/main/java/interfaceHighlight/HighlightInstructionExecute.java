@@ -33,6 +33,11 @@ public class HighlightInstructionExecute {
         instructionMap.put("EqLG6SQoEO7LvZT7sfC5-69", List.of("NOP", "ADD", "SUB", "AND", "OR", "NAND", "XOR", "NOR", "X", "X", "MFHI", "MFLO", "MOV", "SLL", "SRL", "SLLV", "SRLV", "SLT", "X", "X", "X", "SRA", "ADDI", "SUBI", "ANDI", "ORI", "XORI", "LW", "X", "X", "X", "X", "X", "SLTI", "X", "JAL"));
     }
 
+    /**
+     * Returns the components that should be highlighted for the given instruction
+     * @param instruction The instruction to be decoded
+     * @return List<String> The components to be highlighted
+     */
     public static List<String> componentsToHighlight(String instruction) {
         List<String> highlightComponents = new ArrayList<>();
         instructionMap.replaceAll((key,value) -> value.stream()
@@ -45,6 +50,12 @@ public class HighlightInstructionExecute {
         }
         return highlightComponents;
     }
+
+    /**
+     * Returns the components that should not be highlighted for the given instruction
+     * @param instruction The instruction to be decoded
+     * @return List<String> The components to not be highlighted
+     */
     public static List<String> componentsToNotHighlight(String instruction){
         List<String> highlightComponents = new ArrayList<>();
         instructionMap.replaceAll((key,value) -> value.stream()

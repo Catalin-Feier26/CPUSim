@@ -37,7 +37,6 @@ public class IFIDRegister {
         this.PC = 0;
         this.instruction = "";
     }
-
     /**
      * Gets the value of the PC.
      * @return int The value of the current PC.
@@ -48,7 +47,7 @@ public class IFIDRegister {
 
     /**
      * Sets the value of the PC.
-     * @param PC
+     * @param PC The value of the PC to be set.
      * @throws IllegalArgumentException if the PC is negative.
      */
     public void setPC(int PC) throws IllegalArgumentException {

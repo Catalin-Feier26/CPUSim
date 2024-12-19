@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import model.clockType;
 import mips.MIPSController;
@@ -304,7 +303,6 @@ public class ApiController {
             return  "Error saving instructions.";
         }
     }
-
 
     public static class ClockTypeRequest{
         private clockType clockType;
