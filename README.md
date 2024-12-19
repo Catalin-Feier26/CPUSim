@@ -19,7 +19,7 @@ The MIPS Pipeline CPU Simulator is an interactive tool designed to help users un
 ## Features
 - **Pipeline Visualization**: Displays the instruction flow through the stages (IF, ID, EX, MEM, WB).
 - **Interactive Controls**: Start, Stop, and Next buttons to control the simulation manually or automatically.
-- **Hazard Detection**: Detects and resolves data and control hazards, displaying them in the UI.
+- **Hazard Detection**: Detects and resolves data hazards, displaying them in the UI.
 - **Instruction Input**: Load custom instruction sets to observe pipeline behavior.
 - **Threaded Execution**: The MIPS runs on a separate thread from the main thread in order to improve its overall control.
 - **Highlighting**: Highlights active pipeline components during execution.
@@ -39,5 +39,23 @@ The MIPS Pipeline CPU Simulator is an interactive tool designed to help users un
 ## Setup and Installation
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-repo/mips-pipeline-simulator.git
-   cd mips-pipeline-simulator
+   git clone https://github.com/Catalin-Feier26/CPUSim.git
+   cd CPUSim
+2. **Install Node.js from the official website**:
+
+   https://nodejs.org/en
+3. **Install the Node Package Manager**:
+   ```bash
+   cd frontend
+   npm install
+4. **Run the project**:
+
+   Open the project in your IDE of choice, I use IntelliJ Idea,
+   start the Spring Backend by running the main method of the CpuSimApplication.
+   Open the terminal and run the following commands:
+   ```bash
+   cd frontend
+   npm run
+
+---
+## Usage
