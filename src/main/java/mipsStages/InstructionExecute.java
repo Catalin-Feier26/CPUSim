@@ -204,6 +204,18 @@ public class InstructionExecute {
         zero = (aluResult == 0);
         ALURes=aluResult;
 
+        if(!instruction.isEmpty()){
+            String parts[] = instruction.toUpperCase().split(" ");
+            switch (parts[0]) {
+                case "BLTZ" -> zero = operand1 < 0;
+                case "BGTZ" -> zero = operand1 > 0;
+                case "BEQ" -> zero = operand1 == operand2;
+                case "BNE" -> zero = operand1 != operand2;
+                case "SLL" -> ALURes = AirthmeticLogicUnit.SL(operand1,idexRegister.getShamt());
+                case "SRL" -> ALURes = AirthmeticLogicUnit.SR(operand1,idexRegister.getShamt());
+                case "SRA" -> ALURes = AirthmeticLogicUnit.SRA(operand1,idexRegister.getShamt());
+            }
+        }
         passControls();
         return pretty();
     }

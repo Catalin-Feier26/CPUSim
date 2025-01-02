@@ -502,4 +502,8 @@ public class IDEXRegister {
                 ", jumpAddress=" + jumpAddress +
                 "}";
     }
+
+    public int getShamt() {
+        return sa;
+    }
 }

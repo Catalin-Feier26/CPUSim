@@ -13,10 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import model.clockType;
 import mips.MIPSController;
@@ -51,8 +48,8 @@ public class ApiController {
     }
 
     @GetMapping("api/registerFile")
-    public HashMap<String, Integer> getRegisterFile() {
-        HashMap<String, Integer> registerMap = new HashMap<>();
+    public TreeMap<String, Integer> getRegisterFile() {
+        TreeMap<String, Integer> registerMap = new TreeMap<>();
         HashMap<Register, Integer> registerFileData = mips.getRegisterFileData();
         for (Map.Entry<Register, Integer> entry : registerFileData.entrySet()) {
             registerMap.put(entry.getKey().name(), entry.getValue());
@@ -60,18 +57,17 @@ public class ApiController {
         return registerMap;
     }
 
-    @GetMapping("/api/memoryData")
-    public HashMap<String, Integer> getMemoryData() {
-        HashMap<String, Integer> memoryMap = new HashMap<>();
-        HashMap<Integer, Integer> memoryData = mips.getMemory();
 
+    @GetMapping("/api/memoryData")
+    public LinkedHashMap<String, Integer> getMemoryData() {
+        LinkedHashMap<String, Integer> sortedMemoryMap = new LinkedHashMap<>();
+        Map<Integer, Integer> memoryData = new TreeMap<>(mips.getMemory());
         for (Map.Entry<Integer, Integer> entry : memoryData.entrySet()) {
-            memoryMap.put("Address " + entry.getKey(), entry.getValue());
+            sortedMemoryMap.put("Address " + entry.getKey(), entry.getValue());
         }
 
-        return memoryMap;
+        return sortedMemoryMap;
     }
-
 
     @GetMapping("/api/syntax")
     public String getSyntax(){

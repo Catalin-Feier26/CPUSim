@@ -92,7 +92,12 @@ public class HazardDetection {
     public void detectAndSolveHazards() {
         List<String> currentInstructionList = new ArrayList<>(instructionList);
         int iteration = 0; // To track the number of iterations
+        int maxIterations = 100; // To prevent infinite loops
         do {
+            if (iteration >= maxIterations) {
+                System.err.println("Max iterations reached. Exiting to prevent infinite loop.");
+                break;
+            }
             System.out.println("Iteration: " + iteration);
             nopsAdded = false;
             updatedInstructionList.clear(); // Clear the updated list for each iteration
@@ -154,14 +159,24 @@ public class HazardDetection {
      * @return true if a match is found, false otherwise.
      */
     private boolean destinationMatchesSources(String[] parts, String match){
+        if (match == null || parts == null) {
+            return false;
+        }
+        if(match.equals("R0")){
+            return false;
+        }
         switch (parts[0]){
             case "NOP", "MFHI", "MFLO", "J": return false;
             case "ADD", "SUB", "AND", "OR", "NAND", "XOR", "NOR", "SLLV", "SRLV", "SLT":
                 if (match.equals(parts[2]) || match.equals(parts[3]))
                     return  true;
                 break;
-            case "MULT", "DIV", "BEQ", "BNE", "BGEZ", "BLTZ":
+            case "MULT", "DIV", "BEQ", "BNE":
                 if(match.equals(parts[1])||match.equals(parts[2]))
+                    return true;
+                break;
+                case "BGEZ", "BLTZ":
+                if(match.equals(parts[1]))
                     return true;
                 break;
             case "MOV", "SLL", "SRL", "SRA", "ADDI", "SUBI","ANDI","ORI","XORI","SLTI":
@@ -195,8 +210,6 @@ public class HazardDetection {
                     return true; // Match with the source register
                 }
                 break;
-
-
         }
         return false;
     }
@@ -224,7 +237,7 @@ public class HazardDetection {
                 }
             }
         }
-        return "R0";
+        return "";
     }
     /**
      * Decodes the destination register for R-type instructions.

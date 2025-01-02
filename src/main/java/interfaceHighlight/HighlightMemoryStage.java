@@ -34,6 +34,9 @@ public class HighlightMemoryStage {
     public static List<String> componentsToHighlight(String instruction) {
         List<String> highlightComponents = new ArrayList<>();
         for (Map.Entry<String, List<String>> entry : instructionMap.entrySet()) {
+            if(instruction.isEmpty()){
+                break;
+            }
             if (entry.getValue().contains(instruction.toUpperCase().split(" ")[0])) {
                 highlightComponents.add(entry.getKey());
             }

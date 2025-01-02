@@ -44,6 +44,9 @@ public class HighlightInstructionExecute {
                 .filter(instr -> !instr.equals("X"))
                 .toList());
         for (Map.Entry<String, List<String>> entry : instructionMap.entrySet()) {
+            if(instruction.isEmpty()){
+                break;
+            }
             if (entry.getValue().contains(instruction.toUpperCase().split(" ")[0])) {
                 highlightComponents.add(entry.getKey());
             }
@@ -62,6 +65,9 @@ public class HighlightInstructionExecute {
                 .filter(instr -> !instr.equals("X"))
                 .toList());
         for (Map.Entry<String, List<String>> entry : instructionMap.entrySet()) {
+            if(instruction.isEmpty()){
+                break;
+            }
             if(!entry.getValue().contains(instruction.toUpperCase().split(" ")[0])){
                 highlightComponents.add(entry.getKey());
             }

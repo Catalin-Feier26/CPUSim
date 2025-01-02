@@ -261,9 +261,9 @@ public class InstructionDecode {
             case "SRL":
             case "SRA":
                 rd = Enum.valueOf(Register.class, parts[1]);
-                rt = Enum.valueOf(Register.class, parts[2]);
+                rs = Enum.valueOf(Register.class, parts[2]);
                 shamt = Integer.parseInt(parts[3]);
-                rs = Register.R0;
+                rt = Register.R0;
                 funct = 0;
                 break;
             case "MTHI", "MTLO":
