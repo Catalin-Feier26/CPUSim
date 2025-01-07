@@ -5,9 +5,6 @@
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Setup and Installation](#setup-and-installation)
-- [Usage](#usage)
-- [Architecture](#architecture)
-- [Contributing](#contributing)
 
 ---
 
@@ -58,4 +55,3 @@ The MIPS Pipeline CPU Simulator is an interactive tool designed to help users un
    npm run
 
 ---
-## Usage
