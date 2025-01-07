@@ -1,5 +1,5 @@
-RAW Hazard between: MOV R2 R0 and ADD R3 R3 R2 because of the R2 register
-RAW Hazard between: MOV R3 R0 and ADD R3 R3 R2 because of the R3 register
-RAW Hazard between: MOV R4 R0 and SUB R4 R4 R2               because of the R4 register
-RAW Hazard between: ADDI R2 R2 1 and SLT R5 R2 R1 because of the R2 register
-RAW Hazard between: SLT R5 R2 R1 and BEQ R5 R0 23 because of the R5 register
+RAW Hazard between: ADDI R1 R10 1 and SW R1 0(R3) because of the R1 register
+RAW Hazard between: ADDI R2 R10 1 and SW R2 4(R3) because of the R2 register
+RAW Hazard between: ADDI R4 R0 8 and SW R6 0(R4) because of the R4 register
+RAW Hazard between: ADD R6 R1 R2 and SW R6 0(R4) because of the R6 register
+RAW Hazard between: SUBI R5 R5 1 and BNE R5 R0 10 because of the R5 register

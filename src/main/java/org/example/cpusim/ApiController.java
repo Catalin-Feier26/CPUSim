@@ -35,7 +35,7 @@ public class ApiController {
     @GetMapping("/api/instructions")
     public String getInstructions(){
         try{
-            String filePath = "C:/Users/Zach/Desktop/ComputerS/year3/sem1/structure of computer systems/CPUSim/src/main/resources/instructions.txt";
+            String filePath = "src/main/resources/instructions.txt";
             return new String(Files.readAllBytes(Paths.get(filePath)));
         }catch (IOException e){
             return e.getMessage();
